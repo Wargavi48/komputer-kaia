@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 // import HomeView from '../views/HomeView.vue'
 import ComputerDesktopView from '@/views/ComputerDesktopView.vue'
+import PhotoViewer from '@/views/applet/PhotoViewer.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,7 +22,7 @@ const router = createRouter({
     {
       path: '/applet/photo-viewer',
       name: 'Photo viewer',
-      component: () => import('../views/applet/PhotoViewer.vue'),
+      component: PhotoViewer,
     },
   ],
 })
