@@ -59,6 +59,16 @@ const runningApps = reactive([
     minHeight: window.innerHeight / 2,
     contentUrl: '/applet/email',
   },
+  {
+    title: 'Fanbook (External Web embedding demo)',
+    icon: '💌',
+    active: false,
+    maximized: false,
+    minimized: false,
+    minWidth: 500,
+    minHeight: window.innerHeight / 2,
+    contentUrl: 'https://online.fliphtml5.com/cxnyj/lrhn/index.html',
+  },
 ])
 
 function handleWindowMaximize(i) {
@@ -104,7 +114,10 @@ function restart() {
 </script>
 
 <template>
-  <div id="desktop-main" class="w-screen h-screen overflow-hidden flex flex-col items-stretch z-20">
+  <div
+    id="desktop-main"
+    class="w-screen h-screen overflow-hidden flex flex-col items-stretch z-20 select-none"
+  >
     <div
       id="desktop-container"
       style="background-image: url('/we-meet-again.jpeg'); background-size: cover"
