@@ -49,6 +49,16 @@ const runningApps = reactive([
     minHeight: 700,
     contentUrl: '/applet/photo-viewer',
   },
+  {
+    title: 'Email',
+    icon: '💌',
+    active: false,
+    maximized: false,
+    minimized: false,
+    minWidth: 500,
+    minHeight: window.innerHeight / 2,
+    contentUrl: '/applet/email',
+  },
 ])
 
 function handleWindowMaximize(i) {
@@ -97,10 +107,7 @@ function restart() {
   <div id="desktop-main" class="w-screen h-screen overflow-hidden flex flex-col items-stretch z-20">
     <div
       id="desktop-container"
-      style="
-        background-image: url('https://pbs.twimg.com/media/GpgpxVIbEAAPCKG?format=jpg&name=large');
-        background-size: cover;
-      "
+      style="background-image: url('/we-meet-again.jpeg'); background-size: cover"
       class="w-full h-full bg-blue-300 overflow-hidden relative"
       @click="
         () => {
@@ -150,16 +157,12 @@ function restart() {
     <div
       v-if="startMenuOpen"
       id="start-menu"
-      class="absolute bottom-12 left-2 border-2 w-1/6 max-h-3/4 border-gray-300 border-outset bg-gray-200 p-0 border-outset flex flex-col"
+      class="absolute bottom-12 left-2 border-2 w-[200px] max-h-3/4 border-gray-300 border-outset bg-gray-200 p-0 border-outset flex flex-col z-50"
     >
       <div
         class="flex flex-row gap-2 items-center p-2 bg-linear-to-r from-kana-blue to-kana-purple text-xl font-bold"
       >
-        <img
-          src="https://pbs.twimg.com/profile_images/1905625413210308612/szQiRZe8_400x400.jpg"
-          alt="Kanaia-profile"
-          class="h-10 w-10"
-        />
+        <img src="/kanaia.jpg" alt="Kanaia-profile" class="h-10 w-10" />
         <div>Kanaia Asa</div>
       </div>
       <div class="w-full grid grid-cols-1">
@@ -195,51 +198,53 @@ function restart() {
       </div>
     </div>
 
-    <nav
-      @click="
-        () => {
-          startMenuOpen = false
-        }
-      "
-      class="w-screen p-1 bg-gray-200 border-t-2 border-outset flex flex-nowrap gap-2 shrink-0"
-    >
-      <!-- This is the 'Taskbar' -->
-      <ClassicButton
-        @click.stop="
+    <div class="w-full border-t">
+      <nav
+        @click="
           () => {
-            startMenuOpen = !startMenuOpen
+            startMenuOpen = false
           }
         "
-        class="border-gray-400 shrink-0"
-        >🐟 Start</ClassicButton
+        class="w-screen p-1 bg-gray-200 border-t-2 border-outset flex flex-nowrap gap-2 shrink-0 shadow-lg"
       >
-
-      <div class="flex flex-row flex-nowrap w-full grow-0 gap-2">
-        <button
-          v-for="(app, i) in runningApps"
-          :key="i"
-          @click="
+        <!-- This is the 'Taskbar' -->
+        <ClassicButton
+          @click.stop="
             () => {
-              if (app.active) {
-                handleWindowMinimize(i)
-              } else {
-                activateWindow(i)
-              }
+              startMenuOpen = !startMenuOpen
             }
           "
-          class="border-2 px-1 max-w-[10em] min-w-[2em] text-nowrap shrink truncate"
-          :class="{
-            'bg-white font-bold border-inset': app.active,
-            'border-outset': !app.active,
-          }"
+          class="border-gray-400 shrink-0"
+          >🐟 Start</ClassicButton
         >
-          {{ app.title }}
-        </button>
-      </div>
 
-      <div class="border-2 shrink-0 border-gray-300 bg-gray-300 border-inset p-1 ms-auto">
-        {{ clockNow }}
-      </div>
-    </nav>
+        <div class="flex flex-row flex-nowrap w-full grow-0 gap-2">
+          <button
+            v-for="(app, i) in runningApps"
+            :key="i"
+            @click="
+              () => {
+                if (app.active) {
+                  handleWindowMinimize(i)
+                } else {
+                  activateWindow(i)
+                }
+              }
+            "
+            class="border-2 px-1 max-w-[20em] min-w-[10em] text-nowrap shrink truncate text-start"
+            :class="{
+              'bg-white font-bold border-inset': app.active,
+              'border-outset': !app.active,
+            }"
+          >
+            {{ app.title }}
+          </button>
+        </div>
+
+        <div class="border-2 shrink-0 border-gray-300 bg-gray-300 border-inset p-1 ms-auto">
+          {{ clockNow }}
+        </div>
+      </nav>
+    </div>
   </div>
 </template>
