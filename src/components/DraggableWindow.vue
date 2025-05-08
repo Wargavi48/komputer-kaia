@@ -117,6 +117,7 @@ watch(isDragging, (nowDragging) => {
       'w-full h-full relative': props.maximized,
       'absolute resize': !props.maximized,
       'shadow-2xl': props.windowActive,
+      'z-0': !props.windowActive,
     }"
   >
     <div class="window-frame border-4 bg-gray-200 p-0 w-full h-full flex flex-col">
