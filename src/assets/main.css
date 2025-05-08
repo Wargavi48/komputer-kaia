@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@plugin "@tailwindcss/typography";
+
 @theme {
   --color-kana-blue: #99b1dc;
   --color-kana-blue-pale: #c2d2f5;
