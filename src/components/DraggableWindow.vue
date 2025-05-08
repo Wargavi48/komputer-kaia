@@ -15,8 +15,8 @@ const dragHandle = ref(null)
 const windowFrame = ref(null)
 
 const windowPos = reactive({
-  x: 0,
-  y: 0,
+  x: Math.random() * (window.innerWidth / 3),
+  y: Math.random() * (window.innerWidth / 4),
 })
 
 const initialMousePosition = reactive({
@@ -116,6 +116,7 @@ watch(isDragging, (nowDragging) => {
       'z-50': !props.minimized && props.windowActive,
       'w-full h-full relative': props.maximized,
       'absolute resize': !props.maximized,
+      'shadow-2xl': props.windowActive,
     }"
   >
     <div class="window-frame border-4 bg-gray-200 p-0 w-full h-full flex flex-col">
