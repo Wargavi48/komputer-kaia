@@ -46,8 +46,8 @@ const runningApps = reactive([
     maximized: false,
     minimized: false,
     minWidth: 500,
-    minHeight: 700,
-    contentUrl: '/applet/photo-viewer',
+    minHeight: 300,
+    contentUrl: '/applet/photo-album',
   },
   {
     title: 'Email',
@@ -157,7 +157,7 @@ function restart() {
         <iframe
           v-if="!app.contentUrl"
           class="w-full h-full"
-          src="https://www.youtube.com/embed/_ndMYK3eGiY?si=tzxU1hCde6JQOaZ4"
+          src="https://www.youtube.com/embed/dTE_TbM2jE4?si=xFvHoVsBlnCsDSTz"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

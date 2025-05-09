@@ -27,6 +27,11 @@ const router = createRouter({
       name: 'Email Client',
       component: () => import('../views/applet/EmailApp.vue'),
     },
+    {
+      path: '/applet/photo-album',
+      name: 'Photo Album',
+      component: () => import('../views/applet/PhotoAlbum.vue'),
+    },
   ],
 })
 
