@@ -89,6 +89,8 @@ watch(isDragging, (nowDragging) => {
     window.removeEventListener('mouseleave', handleDragEnd)
   }
 })
+
+const isWindowHeldDown = ref(false)
 </script>
 
 <template>
@@ -109,6 +111,19 @@ watch(isDragging, (nowDragging) => {
     @mousedown="
       () => {
         emits('focused')
+        isWindowHeldDown = true
+      }
+    "
+    @mouseup="
+      () => {
+        isWindowHeldDown = false
+      }
+    "
+    @mouseenter="
+      (e) => {
+        if (e.buttons === 0 || !e.buttons) {
+          isWindowHeldDown = false
+        }
       }
     "
     class="window-outer-frame border border-gray-800 flex flex-col overflow-auto w-[0px] h-[0px]"
@@ -188,7 +203,7 @@ watch(isDragging, (nowDragging) => {
       >
         <!-- window content here -->
         <div
-          v-if="isDragging || !props.windowActive"
+          v-if="isDragging || !props.windowActive || isWindowHeldDown"
           class="absolute z-50 w-full h-full top-0 left-0"
         >
           <!-- Content shield -->
