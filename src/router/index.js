@@ -32,6 +32,11 @@ const router = createRouter({
       name: 'Photo Album',
       component: () => import('../views/applet/PhotoAlbum.vue'),
     },
+    {
+      path: '/applet/video-call',
+      name: 'Video Call',
+      component: () => import('../views/applet/VideoCall.vue'),
+    },
   ],
 })
 

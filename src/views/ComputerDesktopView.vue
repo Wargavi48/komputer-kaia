@@ -40,6 +40,16 @@ const runningApps = reactive([
     minimized: false,
   },
   {
+    title: 'Video Call',
+    icon: '🎥',
+    active: false,
+    maximized: false,
+    minimized: false,
+    minWidth: 800,
+    minHeight: 600,
+    contentUrl: '/applet/video-call',
+  },
+  {
     title: 'Photo Viewer',
     icon: '🖼',
     active: false,
