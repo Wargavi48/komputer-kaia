@@ -28,9 +28,9 @@ const router = createRouter({
       component: () => import('../views/applet/EmailApp.vue'),
     },
     {
-      path: '/applet/photo-album',
+      path: '/applet/photo-album/:photo?',
       name: 'Photo Album',
-      component: () => import('../views/applet/PhotoAlbum.vue'),
+      component: () => import('../views/applet/PhotoAlbum/Index.vue'),
     },
     {
       path: '/applet/video-call',
