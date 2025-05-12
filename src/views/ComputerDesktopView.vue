@@ -33,7 +33,7 @@ const apps = [
 
 const runningApps = reactive([
   {
-    title: 'Switch by Kanaia Asa',
+    title: 'Kanayobi',
     icon: '🎶',
     active: false,
     maximized: false,
