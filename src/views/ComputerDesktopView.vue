@@ -55,8 +55,8 @@ const runningApps = reactive([
     active: false,
     maximized: false,
     minimized: false,
-    minWidth: 500,
-    minHeight: 300,
+    minWidth: 640,
+    minHeight: 480,
     contentUrl: '/applet/photo-album',
   },
   {
@@ -140,7 +140,7 @@ function restart() {
     >
       <DraggableWindow
         v-for="(app, i) in runningApps"
-        :key="i"
+        :key="app.title"
         @maximize="() => handleWindowMaximize(i)"
         @restore="() => handleWindowRestore(i)"
         @minimize="() => handleWindowMinimize(i)"
@@ -162,6 +162,7 @@ function restart() {
           :src="app.contentUrl"
           class="w-full h-full"
           frameborder="0"
+          allowfullscreen
         ></iframe>
         <!-- The youtube embed is a placeholder -->
         <iframe
