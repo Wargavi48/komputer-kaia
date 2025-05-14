@@ -1,25 +1,28 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import ClassicButton from '@/components/ClassicButton'
-import { faker } from '@faker-js/faker/locale/id_ID'
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { reactive } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import ImgThumbnail from './components/ImgThumbnail.vue'
 import PhotoViewer from './components/PhotoViewer.vue'
 // import ClassicIcon from '@/components/ClassicIcon.vue'
 
-/**
- * @type {any[]}
- */
-const images = reactive(
-  Array.apply(null, Array(50)).map(() => ({
-    filename: `${faker.lorem.words({ min: 1, max: 5 }).replace(/\s+/g, '-')}.${faker.helpers.arrayElement(['png', 'jpg', 'jpeg'])}`,
-    name: faker.internet.username(),
-    url: `https://picsum.photos/seed/${faker.lorem.word()}/${faker.number.int({ min: 700, max: 1500 })}/${faker.number.int({ min: 700, max: 1500 })}`,
-    selected: false,
-    rotation: 0,
-  })),
-)
+// Data foto diambil secara dinamis dari service
+import { getPhotoAlbumData } from '@/services/photoAlbumService'
+
+const images = reactive([])
+
+// Mengambil data foto saat komponen dimount
+onMounted(async () => {
+  try {
+    const photoData = await getPhotoAlbumData()
+    // Update reactive array dengan data yang diambil dari service
+    images.push(...photoData)
+  } catch (error) {
+    console.error('Gagal mengambil data foto:', error)
+  }
+})
 
 const baseUrlPath = '/applet/photo-album'
 
