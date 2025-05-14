@@ -37,6 +37,11 @@ const router = createRouter({
       name: 'Video Call',
       component: () => import('../views/applet/VideoCall.vue'),
     },
+    {
+      path: '/applet/media-player',
+      name: 'Media Player',
+      component: () => import('../views/applet/MediaPlayer/Index.vue'),
+    },
   ],
 })
 

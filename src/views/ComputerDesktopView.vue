@@ -32,23 +32,23 @@ const apps = [
 ]
 
 const runningApps = reactive([
-  {
-    title: 'Kanayobi',
-    icon: '🎶',
-    active: false,
-    maximized: false,
-    minimized: false,
-  },
-  {
-    title: 'Video Call',
-    icon: '🎥',
-    active: false,
-    maximized: false,
-    minimized: false,
-    minWidth: 800,
-    minHeight: 600,
-    contentUrl: '/applet/video-call',
-  },
+  // {
+  //   title: 'Kanayobi',
+  //   icon: '🎶',
+  //   active: false,
+  //   maximized: false,
+  //   minimized: false,
+  // },
+  // {
+  //   title: 'Video Call',
+  //   icon: '🎥',
+  //   active: false,
+  //   maximized: false,
+  //   minimized: false,
+  //   minWidth: 800,
+  //   minHeight: 600,
+  //   contentUrl: '/applet/video-call',
+  // },
   {
     title: 'Photo Viewer',
     icon: '🖼',
@@ -69,15 +69,25 @@ const runningApps = reactive([
     minHeight: window.innerHeight / 2,
     contentUrl: '/applet/email',
   },
+  // {
+  //   title: 'Fanbook (External Web embedding demo)',
+  //   icon: '💌',
+  //   active: false,
+  //   maximized: false,
+  //   minimized: false,
+  //   minWidth: 500,
+  //   minHeight: window.innerHeight / 2,
+  //   contentUrl: 'https://online.fliphtml5.com/cxnyj/lrhn/index.html',
+  // },
   {
-    title: 'Fanbook (External Web embedding demo)',
-    icon: '💌',
+    title: 'Kaia Media Player',
+    icon: '/icons/wm.png',
     active: false,
     maximized: false,
     minimized: false,
     minWidth: 500,
     minHeight: window.innerHeight / 2,
-    contentUrl: 'https://online.fliphtml5.com/cxnyj/lrhn/index.html',
+    contentUrl: '/applet/media-player',
   },
 ])
 
@@ -86,6 +96,7 @@ function handleWindowMaximize(i) {
 }
 
 function handleWindowMinimize(i) {
+  runningApps[i].maximized = false
   runningApps[i].minimized = true
   runningApps[i].active = false
 }
