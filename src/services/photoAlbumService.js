@@ -25,7 +25,6 @@ export async function getPhotoAlbumData() {
   return datas
     .filter((data) => data.fanSubmission)
     .map((data, i) => {
-      console.log(data)
       const { directGuess } = generateDriveEmbedUrl(data.fanSubmission)
 
       return {
