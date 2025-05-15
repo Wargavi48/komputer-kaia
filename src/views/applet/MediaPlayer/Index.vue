@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch, watchEffect } from 'vue'
+import { computed, ref, watch } from 'vue'
 import Slider from './components/SliderComponent.vue'
 import Youtube from 'vue3-youtube'
 import dayjs from 'dayjs'
@@ -28,6 +28,8 @@ const playlist = [
     url: 'https://www.youtube.com/watch?v=_ndMYK3eGiY',
   },
 ]
+
+const showPlaylist = ref(false)
 
 const activeVideoIndex = ref(-1)
 const activeVideo = computed(() => {
@@ -143,23 +145,48 @@ function handlePrevBtnClick() {
 </script>
 
 <template>
-  <div class="flex flex-col w-screen h-screen overflow-hidden">
-    <div class="grow-0 h-full bg-black border-4 border-inset">
-      <Youtube
-        v-if="activeVideoIndex > -1"
-        @state-change="handlePlaybackStateChanged"
-        ref="youtubePlayer"
-        width="100%"
-        height="100%"
-        class="w-full h-full"
-        :src="activeVideo.url"
-        :vars="{
-          controls: 0,
-          autoplay: 1,
-        }"
-      ></Youtube>
+  <div class="flex flex-col w-screen h-screen overflow-hidden select-none">
+    <div style="height: calc(100vh - 95px)" class="flex grow-0 flex-row flex-nowrap h-full">
+      <div class="grow-0 w-full bg-black border-4 border-inset shrink">
+        <Youtube
+          v-if="activeVideoIndex > -1"
+          @state-change="handlePlaybackStateChanged"
+          ref="youtubePlayer"
+          width="100%"
+          height="100%"
+          class="w-full h-full"
+          :src="activeVideo.url"
+          :vars="{
+            controls: 0,
+            autoplay: 1,
+          }"
+        ></Youtube>
+      </div>
+      <div
+        v-if="showPlaylist"
+        class="bg-gray-400 w-[300px] shrink min-h-0 border-4 border-inset divide-gray-600 h-full overflow-y-auto"
+      >
+        <div
+          v-for="(item, i) in playlist"
+          :key="item.url"
+          :tabindex="i"
+          class="p-2 border-b border-gray-500"
+          :class="{
+            'bg-gray-300': i === activeVideoIndex,
+            'cursor-pointer': i !== activeVideoIndex,
+          }"
+          @click="
+            () => {
+              activeVideoIndex = i
+            }
+          "
+        >
+          <p class="font-bold">{{ item.title }}</p>
+          <p>{{ item.artist || 'N/A' }} / {{ item.album || 'N/A' }}</p>
+        </div>
+      </div>
     </div>
-    <div class="bg-gray-300 p-4 space-y-4">
+    <div class="bg-gray-300 p-4 space-y-4 h-[95px] shrink-0">
       <div class="shrink-0 flex flex-row gap-4">
         <div class="shrink-0 font-mono">{{ currentTimestamp }} / {{ formattedDuration }}</div>
         <Slider
@@ -173,7 +200,7 @@ function handlePrevBtnClick() {
           :value="progress"
         ></Slider>
       </div>
-      <div class="space-x-1">
+      <div class="flex flex-row flex-nowrap gap-1">
         <ClassicButton
           @click="handlePlayBtnClick"
           :disabled="playbackStatus === 1 && activeVideoIndex >= 0"
@@ -209,6 +236,25 @@ function handlePrevBtnClick() {
         >
           <span class="group-disabled:opacity-50 bi-fast-forward-fill"></span>
         </ClassicButton>
+        <div class="ms-auto space-x-1">
+          <ClassicButton
+            @click="
+              () => {
+                showPlaylist = !showPlaylist
+              }
+            "
+            class="inline-flex gap-2 items-center px-2"
+          >
+            <span
+              class="text-2xl"
+              :class="{
+                'bi-chevron-bar-left': !showPlaylist,
+                'bi-chevron-bar-right': showPlaylist,
+              }"
+            ></span>
+            <span> Playlist </span>
+          </ClassicButton>
+        </div>
       </div>
     </div>
   </div>
