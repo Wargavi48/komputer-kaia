@@ -5,8 +5,16 @@ dayjs.extend(UTC)
 
 /**
  * Format waktu dalam format mm:ss
+ * @param {number} seconds - Waktu dalam detik
+ * @returns {string} - Waktu yang diformat
  */
-export const formatTime = (seconds) => dayjs.unix(seconds).utc().format('mm:ss')
+export const formatTime = (seconds) => {
+  // Validasi input untuk mencegah Invalid Date
+  if (seconds === undefined || seconds === null || isNaN(seconds)) {
+    return '00:00'
+  }
+  return dayjs.unix(seconds).utc().format('mm:ss')
+}
 
 /**
  * Utilitas format waktu dan tanggal
@@ -18,7 +26,12 @@ export const formatUtils = {
    * @returns {string} - Tanggal yang diformat
    */
   formatDate(isoDate) {
-    return dayjs(isoDate).format('DD/MM/YYYY HH:mm')
+    // Validasi input untuk mencegah Invalid Date
+    if (!isoDate) return '-'
+
+    const date = dayjs(isoDate)
+    // Cek apakah tanggal valid
+    return date.isValid() ? date.format('DD/MM/YYYY HH:mm') : '-'
   },
 
   /**
@@ -27,10 +40,17 @@ export const formatUtils = {
    * @returns {string} - Durasi yang diformat
    */
   formatDuration(seconds) {
+    // Validasi input untuk mencegah error
+    if (seconds === undefined || seconds === null || isNaN(seconds)) {
+      return '00:00'
+    }
+
     const mins = Math.floor(seconds / 60)
       .toString()
       .padStart(2, '0')
-    const secs = (seconds % 60).toString().padStart(2, '0')
+    const secs = Math.floor(seconds % 60)
+      .toString()
+      .padStart(2, '0')
     return `${mins}:${secs}`
   },
 }
