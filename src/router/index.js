@@ -42,6 +42,11 @@ const router = createRouter({
       name: 'Media Player',
       component: () => import('../views/applet/MediaPlayer/Index.vue'),
     },
+    {
+      path: '/applet/voice-mail',
+      name: 'Voice Mail',
+      component: () => import('../views/applet/VoiceMail/Index.vue'),
+    },
   ],
 })
 

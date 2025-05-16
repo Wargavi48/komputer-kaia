@@ -89,6 +89,16 @@ const runningApps = reactive([
     minHeight: window.innerHeight / 2,
     contentUrl: '/applet/media-player',
   },
+  {
+    title: 'Voice Mail',
+    icon: '📩',
+    active: false,
+    maximized: false,
+    minimized: false,
+    minWidth: 500,
+    minHeight: window.innerHeight / 2,
+    contentUrl: '/applet/voice-mail',
+  },
 ])
 
 function handleWindowMaximize(i) {

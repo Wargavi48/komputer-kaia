@@ -1,7 +1,8 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import { computed, ref, watch } from 'vue'
-import Slider from './components/SliderComponent.vue'
 import Youtube from 'vue3-youtube'
+import Slider from '@/components/SliderComponent.vue'
 import dayjs from 'dayjs'
 import UTC from 'dayjs/plugin/utc'
 import ClassicButton from '@/components/ClassicButton.vue'
@@ -60,7 +61,7 @@ function handleScrubStart(value) {
 
 const youtubePlayer = ref(null)
 const playbackStatus = ref(-1)
-const isPlaying = computed(() => playbackStatus.value === 1)
+// const isPlaying = computed(() => playbackStatus.value === 1)
 const videoDuration = ref(0)
 
 const pollingInterval = ref(null)
