@@ -3,39 +3,55 @@ import IconPhone from '@/components/icons/IconPhone.vue'
 import IconCameraOff from '@/components/icons/IconCameraOff.vue'
 import IconMicOff from '@/components/icons/IconMicOff.vue'
 import IconMonitorUp from '@/components/icons/IconMonitorUp.vue'
+import ClassicButton from '@/components/ClassicButton.vue'
 </script>
 
 <template>
-  <div
-    class="relative overflow-hidden w-full h-screen flex flex-col items-center justify-center bg-gray-900"
-  >
-    <!-- Konten utama video call, ganti iframe dengan area video -->
-    <iframe
-      class="w-full h-screen"
-      src="https://www.youtube.com/embed/dTE_TbM2jE4?si=xFvHoVsBlnCsDSTz"
-      title="YouTube video player"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      referrerpolicy="strict-origin-when-cross-origin"
-      allowfullscreen
-    ></iframe>
-    <!-- Kontrol bawah -->
-    <div class="container max-w-xs mx-auto flex justify-between items-center relative py-4">
-      <button class="rounded-full bg-gray-700 p-4">
-        <IconMonitorUp />
-      </button>
-      <button class="rounded-full bg-gray-700 p-4">
-        <IconCameraOff />
-      </button>
-      <button class="rounded-full bg-gray-700 p-4">
-        <IconMicOff />
-      </button>
-      <button class="rounded-full bg-red-700 p-4">
-        <IconPhone />
-      </button>
+  <!-- Konten utama video call -->
+  <div class="bg-gray-200 w-full flex flex-col items-center h-screen gap-2 p-1 justify-between">
+    <!-- Area video dengan border inset klasik -->
+    <div
+      class="w-full h-full border-inset border-2 border-gray-400 bg-black overflow-hidden aspect-video"
+    >
+      <iframe
+        class="w-full h-full"
+        src="https://www.youtube.com/embed/dTE_TbM2jE4?si=xFvHoVsBlnCsDSTz"
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+      ></iframe>
+    </div>
+
+    <!-- Kontrol video call style klasik -->
+    <div class="flex justify-center space-x-2 my-1">
+      <ClassicButton class="px-3 py-1 flex items-center text-xs">
+        <IconMonitorUp class="mr-1" /> <span>Share</span>
+      </ClassicButton>
+      <ClassicButton class="px-3 py-1 flex items-center text-xs">
+        <IconCameraOff class="mr-1" /> <span>Camera</span>
+      </ClassicButton>
+      <ClassicButton class="px-3 py-1 flex items-center text-xs">
+        <IconMicOff class="mr-1" /> <span>Mic</span>
+      </ClassicButton>
+      <ClassicButton
+        class="px-3 py-1 flex items-center text-xs bg-red-100 hover:bg-red-200 active:bg-red-300"
+      >
+        <IconPhone class="mr-1" /> <span>End</span>
+      </ClassicButton>
+    </div>
+
+    <!-- Status bar klasik -->
+    <div class="bg-gray-300 border-t border-gray-400 text-xs flex justify-between w-full px-2 py-1">
+      <div>Status: Connected</div>
+      <div>Duration: 00:00:00</div>
     </div>
   </div>
 </template>
 
-<!-- minWidth: 406,
-    minHeight: 742, -->
+<style scoped>
+.border-inset {
+  border-style: inset;
+}
+</style>
