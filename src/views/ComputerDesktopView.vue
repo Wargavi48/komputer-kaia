@@ -85,8 +85,8 @@ const runningApps = reactive([
     active: false,
     maximized: false,
     minimized: false,
-    minWidth: 500,
-    minHeight: window.innerHeight / 2,
+    minWidth: 640,
+    minHeight: 400,
     contentUrl: '/applet/media-player',
   },
   {
