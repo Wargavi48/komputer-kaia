@@ -1,11 +1,3 @@
-<script setup>
-const props = defineProps({
-  class: {
-    type: String,
-  },
-})
-</script>
-
 <template>
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -18,7 +10,6 @@ const props = defineProps({
     stroke-linecap="round"
     stroke-linejoin="round"
     class="lucide lucide-monitor-up-icon lucide-monitor-up"
-    :class="props.class"
   >
     <path d="m9 10 3-3 3 3" />
     <path d="M12 13V7" />
