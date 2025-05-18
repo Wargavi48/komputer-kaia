@@ -59,7 +59,13 @@ function togglePlay() {
  */
 const audioHandlers = {
   handleLoadedMetadata() {
-    if (audioRef.value) playerState.duration = audioRef.value.duration
+    if (audioRef.value) {
+      // Chromium returns Infinity for Base64 audio duration
+      // Use initialDuration as fallback
+      const duration = audioRef.value.duration
+      playerState.duration =
+        duration === Infinity || isNaN(duration) ? props.initialDuration : duration
+    }
   },
 
   handleTimeUpdate() {

@@ -4,7 +4,7 @@ import ClassicButton from '@/components/ClassicButton.vue'
 import Slider from '@/components/SliderComponent.vue'
 import { formatTime, formatUtils } from '../utils/formatUtils'
 
-defineProps({
+const props = defineProps({
   voicemails: {
     type: Array,
     required: true,
@@ -110,7 +110,12 @@ const savedPlayerUtils = {
     handleLoadedMetadata(id) {
       const state = savedPlayerStates.value[id]
       if (state && state.audioRef) {
-        state.duration = state.audioRef.duration
+        // Chromium returns Infinity for Base64 audio duration
+        // Use voicemail.duration as fallback
+        const duration = state.audioRef.duration
+        const voicemail = props.voicemails.find((v) => v.id === id)
+        state.duration =
+          duration === Infinity || isNaN(duration) ? voicemail?.duration || 0 : duration
       }
     },
 

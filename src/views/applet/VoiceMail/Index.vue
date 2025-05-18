@@ -5,6 +5,7 @@
  * Komponen ini memungkinkan pengguna untuk merekam, menyimpan, dan memutar pesan suara.
  */
 import { ref, onMounted, onUnmounted } from 'vue'
+import dayjs from 'dayjs'
 import ClassicButton from '@/components/ClassicButton.vue'
 import RecorderComponent from './components/RecorderComponent.vue'
 import AudioPlayer from './components/AudioPlayer.vue'
@@ -96,9 +97,9 @@ const saveVoicemail = async () => {
     return
   }
 
-  // Buat ID unik dengan timestamp
+  // Buat ID unik dengan timestamp menggunakan dayjs untuk konsistensi cross-browser
   const id = Date.now().toString()
-  const timestamp = new Date().toISOString()
+  const timestamp = dayjs().toISOString()
 
   // Konversi Blob ke base64 untuk penyimpanan
   let audioData = null
@@ -162,7 +163,10 @@ const deleteVoicemail = (id) => {
       <RecorderComponent ref="recorderRef" @recording-complete="handleRecordingComplete">
         <template #audio-player>
           <div class="flex-1" v-if="recordedAudioData?.url">
-            <AudioPlayer :audio-src="recordedAudioData.url" />
+            <AudioPlayer
+              :audio-src="recordedAudioData.url"
+              :initial-duration="recordedAudioData.duration"
+            />
           </div>
         </template>
       </RecorderComponent>
