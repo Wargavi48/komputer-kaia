@@ -9,7 +9,7 @@
     stroke-width="2"
     stroke-linecap="round"
     stroke-linejoin="round"
-    class="lucide lucide-monitor-up-icon lucide-monitor-up text-white"
+    class="lucide lucide-monitor-up-icon lucide-monitor-up"
   >
     <path d="m9 10 3-3 3 3" />
     <path d="M12 13V7" />
