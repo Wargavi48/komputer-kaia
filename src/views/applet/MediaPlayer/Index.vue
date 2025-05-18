@@ -9,6 +9,9 @@ import ClassicButton from '@/components/ClassicButton.vue'
 
 dayjs.extend(UTC)
 
+const SETTING_MEDIA_VOLUME = 'preferred_media_volume'
+const SETTING_PREFER_MUTED = 'preferred_media_muted'
+
 const playlist = [
   {
     title: 'Kanayobi',
@@ -66,18 +69,6 @@ const videoDuration = ref(0)
 
 const pollingInterval = ref(null)
 
-watch(youtubePlayer, (player) => {
-  if (player) {
-    pollingInterval.value = setInterval(() => {
-      progress.value = player.getCurrentTime()
-    }, 500)
-  } else {
-    if (pollingInterval.value) {
-      clearInterval(pollingInterval.value)
-    }
-  }
-})
-
 const currentTimestamp = computed(() =>
   dayjs
     .unix(isScrubbing.value ? scrubbingValue.value : progress.value)
@@ -87,8 +78,26 @@ const currentTimestamp = computed(() =>
 
 const formattedDuration = computed(() => dayjs.unix(videoDuration.value).utc().format('mm:ss'))
 
+const isMuted = ref(Boolean(window.localStorage.getItem(SETTING_PREFER_MUTED)))
+const volume = ref(Number(window.localStorage.getItem(SETTING_MEDIA_VOLUME)) || 0)
+
+watch(youtubePlayer, (player) => {
+  if (player) {
+    pollingInterval.value = setInterval(() => {
+      if (player) {
+        progress.value = player.getCurrentTime()
+      }
+    }, 500)
+  } else {
+    if (pollingInterval.value) {
+      clearInterval(pollingInterval.value)
+    }
+  }
+})
+
 watch(playbackStatus, (status) => {
   if (status === 0) {
+    // Status 0 means the video is ended, see https://developers.google.com/youtube/iframe_api_reference#Playback_status
     if (activeVideoIndex.value < playlist.length - 1) {
       // Advance to next video in the playlist when it ended
       activeVideoIndex.value++
@@ -98,12 +107,50 @@ watch(playbackStatus, (status) => {
   }
 })
 
+function handlePlayerReady() {
+  const player = youtubePlayer.value
+
+  if (isMuted.value) {
+    player.mute()
+  } else {
+    player.unMute()
+  }
+  player.setVolume(volume.value)
+}
+
 function handlePlaybackStateChanged() {
   const player = youtubePlayer.value
 
   playbackStatus.value = player.getPlayerState()
   videoDuration.value = player.getDuration()
+
+  // if (isMuted.value) {
+  //   player.mute()
+  // } else {
+  //   player.unMute()
+  // }
+  // player.setVolume(volume.value)
 }
+
+watch(isMuted, (isNowMuted, wasMuted) => {
+  if (isNowMuted === wasMuted || !youtubePlayer.value) return
+
+  if (isNowMuted) {
+    youtubePlayer.value.mute()
+  } else {
+    youtubePlayer.value.unMute()
+  }
+
+  window.localStorage.setItem(SETTING_PREFER_MUTED, isNowMuted ? 1 : 0)
+})
+
+watch(volume, (current, old) => {
+  if (current == old || !youtubePlayer.value) return
+
+  youtubePlayer.value.setVolume(current)
+
+  window.localStorage.setItem(SETTING_MEDIA_VOLUME, current)
+})
 
 function handlePlayBtnClick() {
   if (activeVideoIndex.value === -1) {
@@ -152,6 +199,7 @@ function handlePrevBtnClick() {
         <Youtube
           v-if="activeVideoIndex > -1"
           @state-change="handlePlaybackStateChanged"
+          @ready="handlePlayerReady"
           ref="youtubePlayer"
           width="100%"
           height="100%"
@@ -160,6 +208,7 @@ function handlePrevBtnClick() {
           :vars="{
             controls: 0,
             autoplay: 1,
+            showinfo: false,
           }"
         ></Youtube>
       </div>
@@ -237,6 +286,49 @@ function handlePrevBtnClick() {
         >
           <span class="group-disabled:opacity-50 bi-fast-forward-fill"></span>
         </ClassicButton>
+        <div class="ms-2 border-s ps-2 flex flex-row shrink-0 items-center gap-2">
+          <ClassicButton
+            @click="
+              () => {
+                isMuted = !isMuted
+              }
+            "
+            class="text-2xl group"
+          >
+            <span v-if="isMuted" class="bi-volume-mute-fill group-disabled:opacity-50"></span>
+            <template v-if="!isMuted">
+              <span v-if="volume < 25" class="bi-volume-off-fill group-disabled:opacity-50"></span>
+              <span
+                v-if="volume >= 25 && volume < 66"
+                class="bi-volume-down-fill group-disabled:opacity-50"
+              ></span>
+              <span v-if="volume >= 66" class="bi-volume-up-fill group-disabled:opacity-50"></span>
+            </template>
+          </ClassicButton>
+        </div>
+        <div class="w-30 ms-2 grow-0 self-center">
+          <Slider
+            :min="0"
+            :max="100"
+            :step="1"
+            :value="volume"
+            @change="
+              (v) => {
+                volume = v
+              }
+            "
+            @scrub-start="
+              (v) => {
+                volume = v
+              }
+            "
+            @scrubbing="
+              (v) => {
+                volume = v
+              }
+            "
+          ></Slider>
+        </div>
         <div class="ms-auto space-x-1">
           <ClassicButton
             @click="
