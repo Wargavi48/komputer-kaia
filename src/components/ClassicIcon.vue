@@ -11,6 +11,6 @@ const props = defineProps({
   <img
     :src="`/icons/${props.name}.png`"
     :alt="props.name"
-    class="aspect-square object-contain object-center"
+    class="aspect-square object-contain object-center inline-block"
   />
 </template>
