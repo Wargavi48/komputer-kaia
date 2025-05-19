@@ -6,6 +6,7 @@ import DraggableWindow from '@/components/DraggableWindow.vue'
 import dayjs from 'dayjs'
 import { onMounted, reactive, ref } from 'vue'
 import { apps, desktopIcons as icons } from '../config/desktop'
+import BootScreen from './BootScreen.vue'
 
 const clockNow = ref(dayjs().format('HH:mm:dd'))
 
@@ -123,14 +124,22 @@ function restart() {
   window.location.reload()
 }
 
+const booting = ref(true)
+const bootScreenDuration = 5000 // ms
+
 onMounted(() => {
   setInterval(() => {
     clockNow.value = dayjs().format('HH : mm : ss')
   }, 1000)
+
+  setTimeout(() => {
+    booting.value = false
+  }, bootScreenDuration)
 })
 </script>
 
 <template>
+  <BootScreen v-if="booting" />
   <div
     id="desktop-main"
     class="w-screen h-screen overflow-hidden flex flex-col items-stretch z-20 select-none"
@@ -208,7 +217,7 @@ onMounted(() => {
     <div
       v-if="startMenuOpen"
       id="start-menu"
-      class="absolute bottom-12 left-2 border-4 w-[200px] max-h-3/4 border-gray-300 border-outset bg-gray-300 p-0 border-outset flex flex-col z-50"
+      class="absolute bottom-12 left-2 border-4 w-[200px] max-h-3/4 border-gray-300 border-outset bg-gray-300 p-0 border-outset flex flex-col z-20"
     >
       <div
         class="flex flex-row gap-2 items-center p-2 bg-linear-to-r from-kana-blue to-kana-purple text-xl font-bold"
