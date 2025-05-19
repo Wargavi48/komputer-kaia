@@ -137,11 +137,11 @@ watch(isMuted, (isNowMuted, wasMuted) => {
 
   if (isNowMuted) {
     youtubePlayer.value.mute()
+    window.localStorage.setItem(SETTING_PREFER_MUTED, 1)
   } else {
     youtubePlayer.value.unMute()
+    window.localStorage.removeItem(SETTING_PREFER_MUTED)
   }
-
-  window.localStorage.setItem(SETTING_PREFER_MUTED, isNowMuted ? 1 : 0)
 })
 
 watch(volume, (current, old) => {
