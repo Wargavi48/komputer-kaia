@@ -73,6 +73,9 @@ function handleDragEnd() {
   currentMousePosition.x = 0
   currentMousePosition.y = 0
 
+  windowPos.x = Math.max(0, windowPos.x)
+  windowPos.y = Math.max(0, windowPos.y)
+
   isDragging.value = false
 }
 
@@ -105,6 +108,7 @@ const isWindowHeldDown = ref(false)
             transform: isDragging ? `translate(${moveOffset.x}px, ${moveOffset.y}px)` : 'none',
             minWidth: `${props.minWidth}px`,
             minHeight: `${props.minHeight}px`,
+            boxShadow: props.windowActive ? '10px 10px rgba(0,0,0,0.2)' : 'unset',
           }
         : null
     "
@@ -131,7 +135,6 @@ const isWindowHeldDown = ref(false)
       'z-50': !props.minimized && props.windowActive,
       'w-full h-full relative': props.maximized,
       'absolute resize': !props.maximized,
-      'shadow-2xl': props.windowActive,
       'z-0': !props.windowActive,
     }"
   >
@@ -144,7 +147,14 @@ const isWindowHeldDown = ref(false)
         }"
       >
         <!-- Title bar -->
-        <div @mousedown="handleDragStart" ref="dragHandle" class="shrink w-full overflow-ellipsis">
+        <div
+          @mousedown="handleDragStart"
+          ref="dragHandle"
+          class="shrink w-full overflow-ellipsis flex flex-row flex-nowrap gap-1 items-center"
+        >
+          <template v-if="$slots.icon">
+            <slot name="icon"></slot>
+          </template>
           <!-- Title Bar text here -->
           <p
             class="px-2 !select-none text-nowrap text-ellipsis"
@@ -155,7 +165,7 @@ const isWindowHeldDown = ref(false)
             {{ props.title }}
           </p>
         </div>
-        <div class="ml-auto shrink-0">
+        <div class="ml-auto shrink-0 space-x-1">
           <!-- Button container -->
           <ClassicButton
             @click="
@@ -163,9 +173,9 @@ const isWindowHeldDown = ref(false)
                 emits('minimize')
               }
             "
-            class="font-bold"
+            class="font-bold overflow-hidden relative border-gray-300"
           >
-            __
+            <span class="bi-dash-lg top-2 relative"></span>
           </ClassicButton>
           <ClassicButton
             @click="
@@ -173,7 +183,7 @@ const isWindowHeldDown = ref(false)
                 emits(props.maximized ? 'restore' : 'maximize')
               }
             "
-            class="font-bold"
+            class="font-bold border-gray-300"
           >
             <span
               :class="{
@@ -188,7 +198,7 @@ const isWindowHeldDown = ref(false)
                 emits('close')
               }
             "
-            class="font-bold"
+            class="font-bold border-gray-300"
           >
             <span class="bi-x-lg"></span>
           </ClassicButton>
