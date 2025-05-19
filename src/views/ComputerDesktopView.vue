@@ -1,105 +1,90 @@
 <script setup>
 import ClassicButton from '@/components/ClassicButton.vue'
+import ClassicIcon from '@/components/ClassicIcon.vue'
+import DesktopIcon from '@/components/DesktopIcon.vue'
 import DraggableWindow from '@/components/DraggableWindow.vue'
 import dayjs from 'dayjs'
 import { onMounted, reactive, ref } from 'vue'
+import { apps, desktopIcons as icons } from '../config/desktop'
 
 const clockNow = ref(dayjs().format('HH:mm:dd'))
 
-onMounted(() => {
-  setInterval(() => {
-    clockNow.value = dayjs().format('HH : mm : ss')
-  }, 1000)
-})
+const runningApps = reactive([])
 
-const apps = [
-  {
-    icon: '🎶',
-    label: 'Music Player',
-  },
-  {
-    icon: '🖼',
-    label: 'Photo Viewer',
-  },
-  {
-    icon: '🎥',
-    label: 'Video Call',
-  },
-  {
-    icon: '💌',
-    label: 'E-Mail',
-  },
-]
+/**
+ * Launch an app from the `apps` array
+ * @param index {number}
+ */
+function openApplet(index) {
+  const selectedApp = apps[index]
 
-const runningApps = reactive([
-  // {
-  //   title: 'Kanayobi',
-  //   icon: '🎶',
-  //   active: false,
-  //   maximized: false,
-  //   minimized: false,
-  // },
-  {
-    title: 'Video Call',
-    icon: '🎥',
-    active: false,
+  for (const app of runningApps) {
+    app.active = false
+  }
+
+  runningApps.push({
+    title: selectedApp.label,
+    icon: selectedApp.icon,
+    active: true,
     maximized: false,
     minimized: false,
-    minWidth: 800,
-    minHeight: 600,
-    contentUrl: '/applet/video-call',
-  },
-  {
-    title: 'Photo Viewer',
-    icon: '🖼',
-    active: false,
-    maximized: false,
-    minimized: false,
-    minWidth: 640,
-    minHeight: 480,
-    contentUrl: '/applet/photo-album',
-  },
-  {
-    title: 'Email',
-    icon: '💌',
-    active: false,
-    maximized: false,
-    minimized: false,
-    minWidth: 500,
-    minHeight: window.innerHeight / 2,
-    contentUrl: '/applet/email',
-  },
-  // {
-  //   title: 'Fanbook (External Web embedding demo)',
-  //   icon: '💌',
-  //   active: false,
-  //   maximized: false,
-  //   minimized: false,
-  //   minWidth: 500,
-  //   minHeight: window.innerHeight / 2,
-  //   contentUrl: 'https://online.fliphtml5.com/cxnyj/lrhn/index.html',
-  // },
-  {
-    title: 'Kaia Media Player',
-    icon: '/icons/wm.png',
-    active: false,
-    maximized: false,
-    minimized: false,
-    minWidth: 640,
-    minHeight: 400,
-    contentUrl: '/applet/media-player',
-  },
-  {
-    title: 'Voice Mail',
-    icon: '📩',
-    active: false,
-    maximized: false,
-    minimized: false,
-    minWidth: 500,
-    minHeight: window.innerHeight / 2,
-    contentUrl: '/applet/voice-mail',
-  },
-])
+    minWidth: selectedApp.windowSetting.minWidth,
+    minHeight: selectedApp.windowSetting.minHeight,
+    contentUrl: selectedApp.appletUrl,
+  })
+
+  startMenuOpen.value = false
+}
+
+const desktopIcons = reactive(
+  icons.map((i) => {
+    i.selected = false
+    return i
+  }),
+)
+
+const iconSelectStartIndex = ref(0)
+
+/**
+ * Handle desktop icon click
+ * @param e {MouseEvent}
+ * @param i {number} index of the icon
+ */
+function handleDesktopIconClick(e, i) {
+  if (!e.ctrlKey) {
+    for (const icon of desktopIcons) {
+      icon.selected = false
+    }
+
+    if (e.shiftKey) {
+      const start = Math.min(i, iconSelectStartIndex.value)
+      const end = Math.max(i, iconSelectStartIndex.value)
+      for (let x = start; x <= end; x++) {
+        desktopIcons[x].selected = true
+      }
+    } else {
+      iconSelectStartIndex.value = i
+    }
+  }
+
+  desktopIcons[i].selected = true
+}
+
+function openSelectedApps() {
+  let i = 0
+  for (const app of desktopIcons) {
+    if (app.selected) {
+      openApplet(i)
+    }
+    i++
+  }
+}
+
+function clearIconSelection() {
+  for (const icon of desktopIcons) {
+    icon.selected = false
+  }
+}
 
 function handleWindowMaximize(i) {
   runningApps[i].maximized = true
@@ -128,12 +113,7 @@ function activateWindow(i) {
   runningApps[i].minimized = false
 }
 
-// const isWindowBeingDragged = ref(false)
-// const isMaximized = ref(false)
-// const isMinmized = ref(false)
-
-// const runningWindows = reactive([]);
-const startMenuOpen = ref(false)
+const startMenuOpen = ref(true)
 
 function shutdown() {
   alert('Unfortunately kamu harus klik tombol close tab/browser manual :)')
@@ -142,6 +122,12 @@ function shutdown() {
 function restart() {
   window.location.reload()
 }
+
+onMounted(() => {
+  setInterval(() => {
+    clockNow.value = dayjs().format('HH : mm : ss')
+  }, 1000)
+})
 </script>
 
 <template>
@@ -151,14 +137,42 @@ function restart() {
   >
     <div
       id="desktop-container"
-      style="background-image: url('/we-meet-again.jpeg'); background-size: cover"
-      class="w-full h-full bg-blue-300 overflow-hidden relative"
+      style="
+        background-image: url('/we-meet-again.jpeg');
+        background-size: 75%;
+        background-position: center;
+        background-repeat: no-repeat;
+      "
+      class="w-full h-full overflow-hidden relative bg-blue-300"
       @click="
         () => {
           startMenuOpen = false
+          clearIconSelection()
         }
       "
     >
+      <div
+        class="p-6 h-fit max-h-full flex flex-row flex-wrap justify-start items-start gap-2 gap-y-6 max-w-[800px]"
+      >
+        <!-- Desktop icon container -->
+        <DesktopIcon
+          v-for="(app, i) in desktopIcons"
+          :key="app.label"
+          :label="app.label"
+          :selected="app.selected"
+          class="w-30"
+          @click.stop="
+            (e) => {
+              handleDesktopIconClick(e, i)
+            }
+          "
+          @dblclick="(e) => openSelectedApps()"
+        >
+          <template #icon>
+            <ClassicIcon :name="app.icon" class="w-12" />
+          </template>
+        </DesktopIcon>
+      </div>
       <DraggableWindow
         v-for="(app, i) in runningApps"
         :key="app.title"
@@ -178,22 +192,14 @@ function restart() {
         :window-active="app.active"
         :title="app.title"
       >
+        <template #icon>
+          <ClassicIcon :name="app.icon" class="w-6 inline-block"></ClassicIcon>
+        </template>
         <iframe
           v-if="app.contentUrl"
           :src="app.contentUrl"
           class="w-full h-full"
           frameborder="0"
-          allowfullscreen
-        ></iframe>
-        <!-- The youtube embed is a placeholder -->
-        <iframe
-          v-if="!app.contentUrl"
-          class="w-full h-full"
-          src="https://www.youtube.com/embed/dTE_TbM2jE4?si=xFvHoVsBlnCsDSTz"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
           allowfullscreen
         ></iframe>
       </DraggableWindow>
@@ -202,7 +208,7 @@ function restart() {
     <div
       v-if="startMenuOpen"
       id="start-menu"
-      class="absolute bottom-12 left-2 border-2 w-[200px] max-h-3/4 border-gray-300 border-outset bg-gray-200 p-0 border-outset flex flex-col z-50"
+      class="absolute bottom-12 left-2 border-4 w-[200px] max-h-3/4 border-gray-300 border-outset bg-gray-300 p-0 border-outset flex flex-col z-50"
     >
       <div
         class="flex flex-row gap-2 items-center p-2 bg-linear-to-r from-kana-blue to-kana-purple text-xl font-bold"
@@ -214,10 +220,11 @@ function restart() {
         <button
           v-for="(app, i) in apps"
           :key="i"
-          class="flex flex-row items-baseline flex-nowrap hover:bg-blue-500 hover:text-white p-1 gap-2 select-none"
+          class="flex flex-row items-center flex-nowrap hover:bg-blue-700 hover:text-white p-1 gap-2 select-none"
+          @click="() => openApplet(i)"
         >
           <div class="shrink-0">
-            {{ app.icon }}
+            <ClassicIcon :name="app.icon" class="w-8" />
           </div>
           <div>
             {{ app.label }}
@@ -250,7 +257,7 @@ function restart() {
             startMenuOpen = false
           }
         "
-        class="w-screen p-1 bg-gray-200 border-t-2 border-outset flex flex-nowrap gap-2 shrink-0 shadow-lg"
+        class="w-screen p-1 bg-gray-300 border-t-2 border-outset flex flex-nowrap gap-2 shrink-0 shadow-lg"
       >
         <!-- This is the 'Taskbar' -->
         <ClassicButton
@@ -259,9 +266,11 @@ function restart() {
               startMenuOpen = !startMenuOpen
             }
           "
-          class="border-gray-400 shrink-0"
-          >🐟 Start</ClassicButton
+          class="border-gray-400 shrink-0 flex flex-row items-center px-2"
         >
+          <ClassicIcon name="command" class="me-2 w-6" />
+          Start
+        </ClassicButton>
 
         <div class="flex flex-row flex-nowrap w-full grow-0 gap-2">
           <button
@@ -276,12 +285,13 @@ function restart() {
                 }
               }
             "
-            class="border-2 px-1 max-w-[20em] min-w-[10em] text-nowrap shrink truncate text-start"
+            class="border-2 px-1 max-w-[20em] border-gray-400 min-w-[10em] text-nowrap shrink truncate text-start flex flex-row flex-nowrap items-center gap-2"
             :class="{
               'bg-white font-bold border-inset': app.active,
               'border-outset': !app.active,
             }"
           >
+            <ClassicIcon :name="app.icon" class="w-6" />
             {{ app.title }}
           </button>
         </div>
