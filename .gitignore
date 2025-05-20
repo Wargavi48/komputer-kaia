@@ -33,3 +33,6 @@ test-results/
 playwright-report/
 .env
 !.env.*
+
+/server/database/**/*.sqlite
+/public/uploads/**/*.*
