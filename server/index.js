@@ -23,6 +23,24 @@ const server = Bun.serve({
     '/api/voicemail': {
       POST: voicemaiController.store,
       GET: voicemaiController.index,
+      OPTIONS: CORS_RESPONSE,
+    },
+    '/api/voicemail/:id': {
+      DELETE: voicemaiController.delete,
+      OPTIONS: CORS_RESPONSE,
+    },
+    '/api/voicemail/:id/allow/:allowed': {
+      PUT: voicemaiController.updateStatus,
+      PATCH: voicemaiController.updateStatus,
+      OPTIONS: CORS_RESPONSE,
+    },
+    '/api/voicemail/safe': {
+      GET: voicemaiController.getSafe,
+      OPTIONS: CORS_RESPONSE,
+    },
+    '/api/voicemail/my/:owner_id': {
+      GET: voicemaiController.getMy,
+      OPTIONS: CORS_RESPONSE,
     },
   },
   fetch() {
