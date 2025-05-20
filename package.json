@@ -6,12 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "serve": "bun ./server/index.js",
     "preview": "vite preview",
     "test:e2e": "playwright test",
     "lint": "eslint . --fix",
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "bun": "^1.2.13",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },
@@ -21,6 +23,7 @@
     "@playwright/test": "^1.51.1",
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.5",
+    "@types/bun": "^1.2.13",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vitejs/plugin-vue-jsx": "^4.1.2",
     "@vue/eslint-config-prettier": "^10.2.0",
