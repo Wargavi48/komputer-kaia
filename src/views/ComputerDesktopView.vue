@@ -7,6 +7,8 @@ import dayjs from 'dayjs'
 import { onMounted, reactive, ref } from 'vue'
 import { apps, desktopIcons as icons } from '../config/desktop'
 import BootScreen from './BootScreen.vue'
+import LoginScreen from './LoginScreen.vue'
+import ShutdownScreen from './ShutdownScreen.vue'
 
 const clockNow = ref(dayjs().format('HH:mm:dd'))
 
@@ -116,16 +118,19 @@ function activateWindow(i) {
 
 const startMenuOpen = ref(true)
 
-function shutdown() {
-  alert('Unfortunately kamu harus klik tombol close tab/browser manual :)')
-}
-
 function restart() {
   window.location.reload()
 }
 
 const booting = ref(true)
 const bootScreenDuration = 5000 // ms
+
+const isLoggedIn = ref(false)
+const isShuttingDown = ref(false)
+
+function shutdown() {
+  isShuttingDown.value = true
+}
 
 onMounted(() => {
   setInterval(() => {
@@ -136,10 +141,22 @@ onMounted(() => {
     booting.value = false
   }, bootScreenDuration)
 })
+
+function makeIconAppear(el) {
+  // Make it seemingly appear at random
+  setTimeout(
+    () => {
+      el.classList.remove('opacity-0')
+    },
+    200 + Math.random() * 500,
+  )
+}
 </script>
 
 <template>
   <BootScreen v-if="booting" />
+  <LoginScreen v-if="!booting && !isLoggedIn" @login="() => (isLoggedIn = true)" />
+  <ShutdownScreen v-if="isShuttingDown" />
   <div
     id="desktop-main"
     class="w-screen h-screen overflow-hidden flex flex-col items-stretch z-20 select-none"
@@ -161,26 +178,28 @@ onMounted(() => {
       "
     >
       <div
-        class="p-6 h-fit max-h-full flex flex-row flex-wrap justify-start items-start gap-2 gap-y-6 max-w-[800px]"
+        class="absolute p-6 h-fit max-h-full flex flex-row flex-wrap justify-start items-start gap-2 gap-y-6 max-w-[800px]"
       >
-        <!-- Desktop icon container -->
-        <DesktopIcon
-          v-for="(app, i) in desktopIcons"
-          :key="app.label"
-          :label="app.label"
-          :selected="app.selected"
-          class="w-30"
-          @click.stop="
-            (e) => {
-              handleDesktopIconClick(e, i)
-            }
-          "
-          @dblclick="(e) => openSelectedApps()"
-        >
-          <template #icon>
-            <ClassicIcon :name="app.icon" class="w-12" />
-          </template>
-        </DesktopIcon>
+        <TransitionGroup :css="false" @enter="makeIconAppear">
+          <!-- Desktop icon container -->
+          <DesktopIcon
+            v-for="(app, i) in desktopIcons.filter(() => !booting && isLoggedIn)"
+            :key="app.label"
+            :label="app.label"
+            :selected="app.selected"
+            class="w-30 opacity-0"
+            @click.stop="
+              (e) => {
+                handleDesktopIconClick(e, i)
+              }
+            "
+            @dblclick="(e) => openSelectedApps()"
+          >
+            <template #icon>
+              <ClassicIcon :name="app.icon" class="w-12" />
+            </template>
+          </DesktopIcon>
+        </TransitionGroup>
       </div>
       <DraggableWindow
         v-for="(app, i) in runningApps"
@@ -275,7 +294,7 @@ onMounted(() => {
               startMenuOpen = !startMenuOpen
             }
           "
-          class="border-gray-400 shrink-0 flex flex-row items-center px-2"
+          class="border-gray-400 shrink-0 flex flex-row items-center px-2 font-bold"
         >
           <ClassicIcon name="command" class="me-2 w-6" />
           Start
