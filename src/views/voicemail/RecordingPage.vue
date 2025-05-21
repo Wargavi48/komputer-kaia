@@ -148,9 +148,9 @@ async function deleteRecording(i) {
 
 <template>
   <div
-    class="w-full min-h-screen flex flex-row items-center justify-center bg-brand-blue-dark overflow-x-hidden"
+    class="w-full min-h-screen flex flex-col-reverse lg:flex-row items-center justify-center bg-brand-blue-dark overflow-x-hidden"
   >
-    <div class="space-y-2 m-10">
+    <div class="space-y-2 m-10 relative z-20">
       <div class="border border-black max-w-5xl min-w-sm shadow-classic">
         <div class="border-4 border-outset bg-gray-300 w-full">
           <div
@@ -263,6 +263,42 @@ async function deleteRecording(i) {
         </div>
       </div>
     </div>
-    <img src="/logo-memori-asa.png" alt="logo memori asa" class="fixed right-4 bottom-4 w-60" />
+
+    <div class="border border-black max-w-3xl mx-10 my-4 min-w-sm relative z-20">
+      <div class="w-full border-4 border-outset">
+        <div class="px-2 py-1 bg-kana-blue-pale w-full">
+          <div class="w-full flex flex-row gap-2">
+            <ClassicIcon name="notepad" class="w-6" />
+            <p>Notepad</p>
+          </div>
+        </div>
+        <div class="border-4 border-inset bg-white w-full p-4 space-y-2">
+          <h1 class="text-2xl font-bold">Voicemail untuk Kanaia Asa</h1>
+          <p>
+            Dalam rangka graduation Kanaia Asa, Wargavi48 memberikan kesempatan spesial buat para
+            fans untuk menyampaikan pesan terakhir kepada Kana lewat voicemail! Kamu bisa merekam
+            pesan suara berdurasi maksimal 20 detik sebagai bentuk dukungan dan salam perpisahan.
+          </p>
+          <h2 class="text-xl font-bold">Ketentuan:</h2>
+          <ol class="list-decimal ps-4">
+            <li>Durasi maksimal record 20 detik</li>
+            <li>
+              Dengan mengklik tombol record artinya anda setuju suara anda di dengar oleh semua
+              orang
+            </li>
+            <li>Isi dari record tidak boleh mengandung SARA</li>
+            <li>
+              Rekaman Pesan suara mungkin diperiksa oleh tim moderator sebelum disampaikan kepada
+              Kanaia
+            </li>
+            <li>
+              Moderator dapat menghapus rekaman apabila diperlukan, keputusan moderator bersifat
+              final
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <img src="/logo-memori-asa.png" alt="logo memori asa" class="fixed right-4 bottom-4 w-60 z-0" />
   </div>
 </template>
