@@ -46,8 +46,9 @@ const server = Bun.serve({
       const remoteAddress = server.requestIP(req)
       const forwardedFor = req.headers.get('X-Forwarded-For')
       const nginxRealIP = req.headers.get('X-Real-IP')
+      const cfRealIP = req.headers.get('CF-Connecting-IP')
 
-      return Response.json({ ip_addr: remoteAddress, forwardedFor, nginxRealIP })
+      return Response.json({ ip_addr: remoteAddress, forwardedFor, nginxRealIP, cfRealIP })
     },
   },
   fetch() {
