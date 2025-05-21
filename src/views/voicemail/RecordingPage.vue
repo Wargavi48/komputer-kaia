@@ -28,6 +28,7 @@ const myVoicemailUrl = computed(() => {
   return new URL(`/api/voicemail/my/${userId.value}`, apiBaseUrl)
 })
 
+const isLoading = ref(true)
 const myRecordings = ref([])
 
 watch(recordedData, async (newData) => {
@@ -37,9 +38,11 @@ watch(recordedData, async (newData) => {
 })
 
 async function fetchMyRecordings() {
+  isLoading.value = true
   const response = await axios.get(myVoicemailUrl.value.href)
 
   myRecordings.value = response.data
+  isLoading.value = false
 }
 
 watch(userId, (id) => {
@@ -142,6 +145,8 @@ async function sendVoicemail() {
   }
 }
 
+const isLimitReached = computed(() => myRecordings.value.length >= uploadLimit)
+
 const isDeleting = ref(false)
 async function deleteRecording(i) {
   if (!confirm('Hapus pesan suara? Pesan suara yang dihapus tidak dapat dikembalikan')) return
@@ -176,7 +181,15 @@ async function deleteRecording(i) {
             <p>Voicemail Recorder</p>
           </div>
           <div class="p-4">
+            <div class="flex flex-row gap-4" v-if="isLimitReached">
+              <ClassicIcon name="warning" class="w-10" />
+              <p>
+                Anda Sudah mencapai batas perekaman pesan suara. Silakan hapus rekaman lama untuk
+                merekam pesan baru
+              </p>
+            </div>
             <RecorderComponent
+              v-if="!isLimitReached && !isLoading"
               ref="audioRecorder"
               @recording-start="handleRecordingStart"
               @recording-complete="handleRecordingComplete"
