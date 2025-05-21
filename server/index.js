@@ -12,7 +12,7 @@ export const CORS_HEADERS = {
   'Access-Control-Allow-Headers': '*',
 }
 
-const CORS_RESPONSE = () => new Response('OK', { headers: {} })
+const CORS_RESPONSE = () => new Response('OK', { headers: CORS_HEADERS })
 
 init()
 const voicemaiController = new VoicemailController()
@@ -44,7 +44,7 @@ const server = Bun.serve({
     },
   },
   fetch() {
-    return new Response('OK')
+    return CORS_RESPONSE()
   },
 })
 
