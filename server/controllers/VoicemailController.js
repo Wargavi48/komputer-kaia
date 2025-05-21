@@ -123,7 +123,7 @@ export class VoicemailController {
     const db = new Database(path.join(__dirname, '..', 'database', 'database.sqlite'))
 
     const query = db.query(
-      'SELECT * FROM voicemail WHERE allowed = true AND owner_id = ? AND deleted_at IS NULL ORDER BY created_at ASC',
+      'SELECT * FROM voicemail WHERE owner_id = ? AND deleted_at IS NULL ORDER BY created_at ASC',
     )
 
     return Response.json(query.all(ownerId), { headers: CORS_HEADERS })
