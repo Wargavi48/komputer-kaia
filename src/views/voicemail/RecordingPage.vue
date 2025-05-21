@@ -9,6 +9,7 @@ import axios from 'axios'
 import ClassicButton from '@/components/ClassicButton.vue'
 import dayjs from 'dayjs'
 import RelativeTime from 'dayjs/plugin/relativeTime'
+import FingerprintJS from '@fingerprintjs/fingerprintjs'
 
 dayjs.extend(RelativeTime)
 
@@ -27,6 +28,7 @@ const myVoicemailUrl = computed(() => {
   return new URL(`/api/voicemail/my/${userId.value}`, apiBaseUrl)
 })
 
+const isLoading = ref(true)
 const myRecordings = ref([])
 
 watch(recordedData, async (newData) => {
@@ -36,9 +38,11 @@ watch(recordedData, async (newData) => {
 })
 
 async function fetchMyRecordings() {
+  isLoading.value = true
   const response = await axios.get(myVoicemailUrl.value.href)
 
   myRecordings.value = response.data
+  isLoading.value = false
 }
 
 watch(userId, (id) => {
@@ -46,9 +50,18 @@ watch(userId, (id) => {
     fetchMyRecordings()
   }
 })
+const fingerprint = ref(null)
 
 onMounted(() => {
   // Generate unique ID to identify user without requiring auth
+  const fpAgent = FingerprintJS.load()
+
+  fpAgent
+    .then((fp) => fp.get())
+    .then((result) => {
+      fingerprint.value = result.visitorId
+    })
+
   const savedUserId = window.localStorage.getItem(USER_ID_FIELD)
   if (savedUserId !== null) {
     userId.value = savedUserId
@@ -89,6 +102,7 @@ function handleRecordingComplete(data) {
   }
 }
 
+const uploadLimit = import.meta.env.VITE_VOICE_UPLOAD_LIMIT || 2
 const senderName = ref('')
 const isSending = ref(false)
 async function sendVoicemail() {
@@ -101,6 +115,7 @@ async function sendVoicemail() {
     const formData = new FormData()
     formData.append('name', senderName.value)
     formData.append('owner_id', userId.value)
+    formData.append('client_fingerprint', fingerprint.value)
     formData.append('duration', recordingDuration.value)
 
     const fileName = senderName.value.trim().replaceAll(/[^a-zA-Z0-9]+/g, '-') + '.webm'
@@ -119,12 +134,18 @@ async function sendVoicemail() {
 
     fetchMyRecordings()
   } catch (error) {
-    alert('Terjadi error ketika mengirim voicemail')
+    if (error.response?.status === 429) {
+      alert('Kamu terlalu banyak mengirim voicemail, Maks: ' + uploadLimit + ' per orang')
+    } else {
+      alert('Terjadi error ketika mengirim voicemail')
+    }
     console.error(error)
   } finally {
     isSending.value = false
   }
 }
+
+const isLimitReached = computed(() => myRecordings.value.length >= uploadLimit)
 
 const isDeleting = ref(false)
 async function deleteRecording(i) {
@@ -160,7 +181,15 @@ async function deleteRecording(i) {
             <p>Voicemail Recorder</p>
           </div>
           <div class="p-4">
+            <div class="flex flex-row gap-4" v-if="isLimitReached">
+              <ClassicIcon name="warning" class="w-10" />
+              <p>
+                Anda Sudah mencapai batas perekaman pesan suara. Silakan hapus rekaman lama untuk
+                merekam pesan baru
+              </p>
+            </div>
             <RecorderComponent
+              v-if="!isLimitReached && !isLoading"
               ref="audioRecorder"
               @recording-start="handleRecordingStart"
               @recording-complete="handleRecordingComplete"
@@ -277,23 +306,25 @@ async function deleteRecording(i) {
           <p>
             Dalam rangka graduation Kanaia Asa, Wargavi48 memberikan kesempatan spesial buat para
             fans untuk menyampaikan pesan terakhir kepada Kana lewat voicemail! Kamu bisa merekam
-            pesan suara berdurasi maksimal 20 detik sebagai bentuk dukungan dan salam perpisahan.
+            pesan suara berdurasi maksimal {{ recordingDurationLimit }} detik sebagai bentuk
+            dukungan dan salam perpisahan.
           </p>
           <h2 class="text-xl font-bold">Ketentuan:</h2>
           <ol class="list-decimal ps-4">
-            <li>Durasi maksimal record 20 detik</li>
-            <li>
-              Dengan mengklik tombol record artinya anda setuju suara anda di dengar oleh semua
-              orang
-            </li>
-            <li>Isi dari record tidak boleh mengandung SARA</li>
+            <li>Durasi maksimal record {{ recordingDurationLimit }} detik</li>
+            <li>Batas maksimum {{ uploadLimit }} pesan suara per orang</li>
+            <li>Isi rekaman pesan suara tidak boleh mengandung SARA</li>
             <li>
               Rekaman Pesan suara mungkin diperiksa oleh tim moderator sebelum disampaikan kepada
               Kanaia
             </li>
             <li>
-              Moderator dapat menghapus rekaman apabila diperlukan, keputusan moderator bersifat
-              final
+              Moderator berhak dan dapat menghapus rekaman Anda karena alasan apapun, keputusan
+              moderator bersifat final
+            </li>
+            <li>
+              Dengan mengirim pesan suara, Anda setuju untuk suara anda diperdengarkan secara publik
+              dan setuju dengan ketentuan-ketentuan yang disebutkan di atas
             </li>
           </ol>
         </div>
