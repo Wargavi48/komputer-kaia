@@ -2,20 +2,30 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { Database } from 'bun:sqlite'
 
-import initSQL from './database/init.sql' with { type: 'text' }
+// import initSQL from './database/init.sql' with { type: 'text' }
+import Bun, { Glob } from 'bun'
 
 // Check database exists
 
-export function init() {
+export async function init() {
   const databasePath = path.join(__dirname, 'database', 'database.sqlite')
 
-  if (!fs.existsSync(databasePath)) {
-    // Database not exists, creating one
-    console.info('database.sqlite does not exists, creating...')
-    const database = new Database(databasePath, { create: true })
-    const statement = database.query(initSQL)
-    statement.run()
+  let database = new Database(databasePath)
+  const migrationPath = path.join(__dirname, 'database', 'simple-migrations')
+  const migrationGlob = new Glob('**/*.sql')
 
-    database.close()
+  // Run all Simple Migrations
+  // This will run all sql statement ignoring any errors
+  for (const file of migrationGlob.scanSync(migrationPath + '/')) {
+    try {
+      const filePath = path.join(migrationPath, file)
+      const sql = await Bun.file(filePath).text()
+
+      const statement = database.query(sql)
+      statement.run()
+    } catch (error) {
+      console.warn(`${file} failed to execute, ignoring...`)
+    }
   }
+  database.close()
 }

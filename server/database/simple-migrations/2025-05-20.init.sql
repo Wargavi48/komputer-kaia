@@ -1,4 +1,4 @@
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
   `voicemail` (
     `id` integer not null primary key autoincrement,
     `owner_id` VARCHAR(36) null,
