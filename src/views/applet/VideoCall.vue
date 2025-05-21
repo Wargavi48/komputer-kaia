@@ -13,7 +13,7 @@ import ClassicButton from '@/components/ClassicButton.vue'
     <div
       class="w-full h-full border-inset border-2 border-gray-400 bg-black overflow-hidden aspect-video"
     >
-      <iframe
+      <!-- <iframe
         class="w-full h-full"
         src="https://www.youtube.com/embed/dTE_TbM2jE4?si=xFvHoVsBlnCsDSTz"
         title="YouTube video player"
@@ -21,7 +21,8 @@ import ClassicButton from '@/components/ClassicButton.vue'
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerpolicy="strict-origin-when-cross-origin"
         allowfullscreen
-      ></iframe>
+      ></iframe> -->
+      <video src="/placeholder-aergia.mp4" controls autoplay class="w-full h-full"></video>
     </div>
 
     <!-- Kontrol video call style klasik -->
