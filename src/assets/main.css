@@ -8,6 +8,9 @@
   --color-kana-blue: #99b1dc;
   --color-kana-blue-pale: #c2d2f5;
   --color-kana-purple: #bea3e7;
+  --color-brand-blue-dark: #1e87bc;
+
+  --shadow-classic: 10px 10px rgba(0, 0, 0, 0.2);
 }
 
 html,
