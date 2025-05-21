@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import ClassicButton from '@/components/ClassicButton.vue'
 import { formatUtils } from '../utils/formatUtils'
 
-const emit = defineEmits(['recording-complete'])
+const emit = defineEmits(['recording-complete', 'recording-start'])
 
 // Audio & recording state
 const mediaRecorder = ref(null)
@@ -52,6 +52,7 @@ const startRecording = async () => {
     mediaRecorder.value.start()
     isRecording.value = true
     recordingStart.value = Date.now()
+    emit('recording-start')
 
     // Update durasi perekaman setiap detik
     intervalId = setInterval(() => {
@@ -79,6 +80,7 @@ defineExpose({
   recordedAudioURL,
   recordedBlobUrl,
   recordingDuration,
+  stopRecording,
 })
 </script>
 
@@ -100,6 +102,6 @@ defineExpose({
       🔴 Recording: {{ formatUtils.formatDuration(recordingDuration) }}
     </div>
 
-    <slot v-if="!isRecording && recordedAudioURL" name="audio-player"></slot>
+    <slot name="audio-player"></slot>
   </div>
 </template>
