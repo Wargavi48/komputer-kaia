@@ -24,13 +24,40 @@ export class VoicemailController {
         throw new Error('Audio is required')
       }
 
+      const ownerId = body.get('owner_id')
+      const fingerprint = body.get('client_fingerprint')
+
+      if (!ownerId || !fingerprint) {
+        return Response.json(
+          {
+            message: 'Forbidden',
+          },
+          { status: 403, headers: CORS_HEADERS },
+        )
+      }
+
+      const countQuery = db.query(
+        'SELECT COUNT(id) as upload_count FROM voicemail WHERE (owner_id = ? OR client_fingerprint = ?) AND deleted_at IS NULL ',
+      )
+
+      const uploadLimit = Number(process.env.VITE_VOICE_UPLOAD_LIMIT) || 2
+
+      const result = countQuery.get(ownerId, fingerprint)
+      if (result.upload_count >= uploadLimit) {
+        return Response.json(
+          { message: 'Too Many Uploads' },
+          { status: 429, headers: CORS_HEADERS },
+        )
+      }
+
       const filename = `${Date.now()}-${oldFilename || fallbackName}`
       const uploadPath = path.join(__dirname, '..', '..', 'public', 'uploads', filename)
 
       await Bun.write(uploadPath, audio)
 
       const audioData = {
-        owner_id: body.get('owner_id') || null,
+        owner_id: ownerId,
+        client_fingerprint: fingerprint,
         name: body.get('name') || null,
         audio_url: `/uploads/${filename}`,
         allowed: true,
@@ -38,10 +65,11 @@ export class VoicemailController {
       }
 
       const statment = db.prepare(
-        'INSERT INTO voicemail (owner_id, name, audio_url, allowed, duration) VALUES (?,?,?,?,?)',
+        'INSERT INTO voicemail (owner_id, client_fingerprint, name, audio_url, allowed, duration) VALUES (?,?,?,?,?,?)',
       )
       statment.run(
         audioData.owner_id,
+        audioData.fingerprint,
         audioData.name,
         audioData.audio_url,
         audioData.allowed,
