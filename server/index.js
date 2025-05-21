@@ -42,6 +42,11 @@ const server = Bun.serve({
       GET: voicemaiController.getMy,
       OPTIONS: CORS_RESPONSE,
     },
+    '/api/me': (req, server) => {
+      const remoteAddress = server.requestIP(req)
+
+      return Response.json({ ip_addr: remoteAddress })
+    },
   },
   fetch() {
     return CORS_RESPONSE()
