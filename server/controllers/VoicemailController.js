@@ -9,39 +9,53 @@ export class VoicemailController {
    * @param {import('bun').BunRequest} req
    */
   async store(req) {
-    const db = new Database(path.join(__dirname, '..', 'database', 'database.sqlite'))
-    const body = await req.formData()
+    try {
+      const db = new Database(path.join(__dirname, '..', 'database', 'database.sqlite'))
+      const body = await req.formData()
 
-    const audio = body.get('audio')
-    const oldFilename = audio.name
-    const fallbackName =
-      Math.round(Math.random() * 9999)
-        .toString()
-        .padStart(4, '0') + '.webm'
+      const audio = body.get('audio')
+      const oldFilename = audio.name
+      const fallbackName =
+        Math.round(Math.random() * 9999)
+          .toString()
+          .padStart(4, '0') + '.webm'
 
-    if (!audio) {
-      throw new Error('Audio is required')
+      if (!audio) {
+        throw new Error('Audio is required')
+      }
+
+      const filename = `${Date.now()}-${oldFilename || fallbackName}`
+      const uploadPath = path.join(__dirname, '..', '..', 'public', 'uploads', filename)
+
+      await Bun.write(uploadPath, audio)
+
+      const audioData = {
+        owner_id: body.get('owner_id') || null,
+        name: body.get('name') || null,
+        audio_url: `/uploads/${filename}`,
+        allowed: true,
+        duration: body.get('duration'),
+      }
+
+      const statment = db.prepare(
+        'INSERT INTO voicemail (owner_id, name, audio_url, allowed, duration) VALUES (?,?,?,?,?)',
+      )
+      statment.run(
+        audioData.owner_id,
+        audioData.name,
+        audioData.audio_url,
+        audioData.allowed,
+        audioData.duration,
+      )
+
+      db.close()
+      return Response.json(audioData, { headers: CORS_HEADERS })
+    } catch (error) {
+      return Response.json({
+        message: 'error',
+        error: error.message,
+      })
     }
-
-    const filename = `${Date.now()}-${oldFilename || fallbackName}`
-    const uploadPath = path.join(__dirname, '..', '..', 'public', 'uploads', filename)
-
-    await Bun.write(uploadPath, audio)
-
-    const audioData = {
-      owner_id: body.get('owner_id') || null,
-      name: body.get('name') || null,
-      audio_url: `/uploads/${filename}`,
-      allowed: true,
-    }
-
-    const statment = db.prepare(
-      'INSERT INTO voicemail (owner_id, name, audio_url, allowed) VALUES (?,?,?,?)',
-    )
-    statment.run(audioData.owner_id, audioData.name, audioData.audio_url, audioData.allowed)
-
-    db.close()
-    return Response.json(audioData, { headers: CORS_HEADERS })
   }
 
   /**
