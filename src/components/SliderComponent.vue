@@ -36,7 +36,11 @@ function quantizeNormal(normalScalar) {
 
 const emits = defineEmits(['change', 'scrubStart', 'scrubEnd', 'scrubbing'])
 // const value = ref(0)
-const normalizedValue = computed(() => (props.value - props.min) / (props.max - props.min))
+const normalizedValue = computed(() => {
+  const preNormal = (props.value - props.min) / (props.max - props.min)
+
+  return Math.max(0, Math.min(1, preNormal))
+})
 
 const track = ref(null)
 const trackBoundingBox = computed(() => {
