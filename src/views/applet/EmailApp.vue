@@ -42,8 +42,6 @@ function parseSpreadsheetDate(dateString) {
 onMounted(async () => {
   const submission = await getSpreadsheetData()
 
-  console.log(submission[0])
-
   for (const item of submission) {
     const sanitizedLetter = DOMPurify.sanitize(item.fanLetter)
     emails.push({
@@ -83,6 +81,17 @@ watch(activeMailIndex, () => {
 })
 
 const isAttachmentOpen = ref(false)
+const attachmentFrame = ref(null)
+
+function handleAttachmentLoad() {
+  console.log('Attachment Loaded')
+
+  /**
+   * @type {HTMLIFrameElement}
+   */
+  const iframe = attachmentFrame.value
+  iframe.scrollIntoView({ behavior: 'smooth' })
+}
 </script>
 
 <template>
@@ -120,7 +129,7 @@ const isAttachmentOpen = ref(false)
     </header>
     <div class="grow-0 bg-gray-200 flex gap-2 flex-row flex-nowrap relative overflow-x-hidden">
       <div
-        class="w-full h-full md:w-1/4 md:block border-3 border-inset py-4 overflow-y-auto"
+        class="w-full h-full md:w-1/4 md:block border-3 border-inset overflow-y-auto"
         :class="{
           // 'w-full': activeMailIndex === null,
           hidden: activeMailIndex !== null,
@@ -201,9 +210,11 @@ const isAttachmentOpen = ref(false)
                 <img src="/hourglass.gif" alt="" class="w-8 h-8" />
               </div>
               <iframe
+                ref="attachmentFrame"
+                @load="handleAttachmentLoad"
                 :src="getDriveEmbeddingURL(currentMail.attachments)"
                 v-if="isAttachmentOpen"
-                class="w-full h-[50vh] relative"
+                class="w-full h-[80vh] relative"
                 frameborder="0"
               ></iframe>
             </div>
