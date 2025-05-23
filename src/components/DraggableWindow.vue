@@ -165,7 +165,7 @@ const isWindowHeldDown = ref(false)
             {{ props.title }}
           </p>
         </div>
-        <div class="ml-auto shrink-0 space-x-1">
+        <div class="ml-auto shrink-0 flex flex-row flex-nowrap gap-1">
           <!-- Button container -->
           <ClassicButton
             @click="
@@ -173,9 +173,9 @@ const isWindowHeldDown = ref(false)
                 emits('minimize')
               }
             "
-            class="font-bold overflow-hidden relative border-gray-300"
+            class="font-bold overflow-hidden relative border-gray-300 flex items-center aspect-square"
           >
-            <span class="bi-dash-lg top-2 relative"></span>
+            <span class="bi-dash-lg top-2 relative leading-4"></span>
           </ClassicButton>
           <ClassicButton
             @click="
@@ -183,9 +183,10 @@ const isWindowHeldDown = ref(false)
                 emits(props.maximized ? 'restore' : 'maximize')
               }
             "
-            class="font-bold border-gray-300"
+            class="font-bold border-gray-300 flex items-center aspect-square"
           >
             <span
+              class="leading-4"
               :class="{
                 'bi-fullscreen': !props.maximized,
                 'bi-fullscreen-exit': props.maximized,
@@ -198,9 +199,9 @@ const isWindowHeldDown = ref(false)
                 emits('close')
               }
             "
-            class="font-bold border-gray-300"
+            class="font-bold border-gray-300 flex items-center aspect-square"
           >
-            <span class="bi-x-lg"></span>
+            <span class="bi-x-lg leading-4"></span>
           </ClassicButton>
         </div>
       </div>
