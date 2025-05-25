@@ -52,6 +52,11 @@ const router = createRouter({
       name: 'Voice Mail Recorder',
       component: () => import('../views/voicemail/RecordingPage.vue'),
     },
+    {
+      path: '/voicemail/moderation',
+      name: 'Voice Mail Moderation',
+      component: () => import('../views/voicemail/ModeratorPage.vue'),
+    },
   ],
 })
 
