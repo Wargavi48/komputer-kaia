@@ -8,9 +8,9 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import dayjs from 'dayjs'
 import ClassicButton from '@/components/ClassicButton.vue'
 import RecorderComponent from './components/RecorderComponent.vue'
-import AudioPlayer from './components/AudioPlayer.vue'
+import AudioPlayer from '@/components/AudioPlayer.vue'
 import SavedVoicemailList from './components/SavedVoicemailList.vue'
-import { audioConverter } from './utils/audioConverter'
+import { audioConverter } from '@/utils/audioConverter'
 
 // Form state
 const name = ref('')

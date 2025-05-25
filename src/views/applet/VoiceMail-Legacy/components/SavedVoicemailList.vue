@@ -2,7 +2,7 @@
 import { ref, reactive } from 'vue'
 import ClassicButton from '@/components/ClassicButton.vue'
 import Slider from '@/components/SliderComponent.vue'
-import { formatTime, formatUtils } from '../utils/formatUtils'
+import { formatTime, formatUtils } from '@/utils/formatUtils'
 
 const props = defineProps({
   voicemails: {
