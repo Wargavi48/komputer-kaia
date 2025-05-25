@@ -3,7 +3,7 @@
 import AudioPlayer from '@/components/AudioPlayer.vue'
 import ClassicButton from '@/components/ClassicButton.vue'
 import ClassicIcon from '@/components/ClassicIcon.vue'
-import { fetchVoiceMails } from '@/services/voicemailService'
+import { fetchVoiceMails } from '@/services/voiceMailService'
 import dayjs from 'dayjs'
 import RelativeTime from 'dayjs/plugin/relativeTime'
 import UTC from 'dayjs/plugin/utc'
