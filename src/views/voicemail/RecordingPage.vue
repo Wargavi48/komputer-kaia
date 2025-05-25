@@ -1,10 +1,10 @@
 <script setup>
 import ClassicIcon from '@/components/ClassicIcon.vue'
-import RecorderComponent from '../applet/VoiceMail/components/RecorderComponent.vue'
+import RecorderComponent from '@/components/RecorderComponent.vue'
 import { v7 as uuidv7 } from 'uuid'
 import { computed, onMounted, ref, watch } from 'vue'
-import { audioConverter } from '../applet/VoiceMail/utils/audioConverter'
-import AudioPlayer from '../applet/VoiceMail/components/AudioPlayer.vue'
+import { audioConverter } from '@/utils/audioConverter'
+import AudioPlayer from '@/components/AudioPlayer.vue'
 import axios from 'axios'
 import ClassicButton from '@/components/ClassicButton.vue'
 import dayjs from 'dayjs'
