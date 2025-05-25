@@ -2,7 +2,7 @@
 import { ref, reactive, computed } from 'vue'
 import Slider from '@/components/SliderComponent.vue'
 import ClassicButton from '@/components/ClassicButton.vue'
-import { formatTime } from '../utils/formatUtils'
+import { formatTime } from '@/utils/formatUtils'
 
 const props = defineProps({
   audioSrc: {
