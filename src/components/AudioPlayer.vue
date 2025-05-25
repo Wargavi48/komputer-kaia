@@ -2,7 +2,7 @@
 import { ref, reactive, computed } from 'vue'
 import Slider from '@/components/SliderComponent.vue'
 import ClassicButton from '@/components/ClassicButton.vue'
-import { formatTime } from '../utils/formatUtils'
+import { formatTime } from '@/utils/formatUtils'
 
 const props = defineProps({
   audioSrc: {
@@ -12,6 +12,10 @@ const props = defineProps({
   initialDuration: {
     type: Number,
     default: 0,
+  },
+  autoplay: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -103,9 +107,20 @@ const scrubHandlers = {
   <div class="border-2 border-gray-300 p-2 bg-gray-50 rounded shadow-inner border-inset">
     <audio
       ref="audioRef"
+      :autoplay="props.autoplay"
       :src="audioSrc"
       @loadedmetadata="audioHandlers.handleLoadedMetadata"
       @timeupdate="audioHandlers.handleTimeUpdate"
+      @play="
+        () => {
+          playerState.isPlaying = true
+        }
+      "
+      @ended="
+        () => {
+          playerState.isPlaying = false
+        }
+      "
       class="hidden"
     ></audio>
 

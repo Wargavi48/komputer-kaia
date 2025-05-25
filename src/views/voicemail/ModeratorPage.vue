@@ -3,7 +3,7 @@ import ClassicButton from '@/components/ClassicButton.vue'
 import ClassicIcon from '@/components/ClassicIcon.vue'
 import axios from 'axios'
 import { onMounted, reactive } from 'vue'
-import AudioPlayer from '../applet/VoiceMail/components/AudioPlayer.vue'
+import AudioPlayer from '@/components/AudioPlayer.vue'
 
 const apiURL = new URL('/api/voicemail', import.meta.env.VITE_VOICE_API_URL)
 

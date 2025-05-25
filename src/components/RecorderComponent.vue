@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import ClassicButton from '@/components/ClassicButton.vue'
-import { formatUtils } from '../utils/formatUtils'
+import { formatUtils } from '@/utils/formatUtils'
 
 const emit = defineEmits(['recording-complete', 'recording-start'])
 
