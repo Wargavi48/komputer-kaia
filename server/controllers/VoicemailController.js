@@ -69,7 +69,7 @@ export class VoicemailController {
       )
       statment.run(
         audioData.owner_id,
-        audioData.fingerprint,
+        audioData.client_fingerprint,
         audioData.name,
         audioData.audio_url,
         audioData.allowed,
