@@ -67,19 +67,29 @@ onMounted(async () => {
     </div>
     <div v-if="selectedIndex !== null" class="w-full p-4 shrink-0">
       <div class="flex flex-row w-full gap-2">
-        <ClassicButton :disabled="selectedIndex === 0" @click="selectedIndex--" class="group">
+        <ClassicButton :disabled="selectedIndex === 0" @click="selectedIndex--" class="group mt-9">
           <ClassicIcon name="arrow-left" class="group-disabled:opacity-50" />
         </ClassicButton>
-        <AudioPlayer
-          class="w-full grow-0"
-          :audio-src="selectedVoicemail.audio_url"
-          :initial-duration="selectedVoicemail.duration"
-          autoplay
-        />
+        <div class="w-full grow-0 space-y-2">
+          <div class="flex flex-row gap-2">
+            <p class="font-bold text-lg">
+              {{ selectedVoicemail.name }}
+            </p>
+            <p class="opacity-75 ms-auto">
+              {{ dayjs.utc(selectedVoicemail.created_at).fromNow() }}
+            </p>
+          </div>
+          <AudioPlayer
+            class="w-full grow-0"
+            :audio-src="selectedVoicemail.audio_url"
+            :initial-duration="selectedVoicemail.duration"
+            autoplay
+          />
+        </div>
         <ClassicButton
           :disabled="selectedIndex === voicemails.length - 1"
           @click="selectedIndex++"
-          class="group"
+          class="group mt-9"
         >
           <ClassicIcon name="arrow-right" class="group-disabled:opacity-50" />
         </ClassicButton>
