@@ -14,10 +14,34 @@ const SETTING_PREFER_MUTED = 'preferred_media_muted'
 
 const playlist = [
   {
-    title: 'Kanayobi',
+    title: 'Punkish',
+    artist: 'JKT48V',
+    album: 'Punkish',
+    url: 'https://www.youtube.com/watch?v=bCeWCo8ICPc',
+  },
+  {
+    title: 'Switch',
     artist: 'Kanaia Asa',
-    album: 'Kanayobi',
-    url: 'https://www.youtube.com/watch?v=dTE_TbM2jE4',
+    album: 'Switch (Cover)',
+    url: 'https://www.youtube.com/watch?v=_ndMYK3eGiY',
+  },
+  {
+    title: 'Heart Gata Virus',
+    artist: 'JKT48V',
+    album: 'Heart Gata Virus',
+    url: 'https://www.youtube.com/watch?v=vvKmNuXc9_0',
+  },
+  {
+    title: 'Fly Me to The Star',
+    artist: 'Kanaia Asa',
+    album: 'Fly Me to The Star (Cover)',
+    url: 'https://www.youtube.com/watch?v=FOfGOirMtmI',
+  },
+  {
+    title: 'Hana',
+    artist: 'Kanaia Asa',
+    album: 'Hana (Cover)',
+    url: 'https://www.youtube.com/watch?v=-9MJzTk2btQ',
   },
   {
     title: 'Rapsodi',
@@ -26,10 +50,28 @@ const playlist = [
     url: 'https://www.youtube.com/watch?v=nsbK62FEHUA',
   },
   {
-    title: 'Switch',
+    title: 'Kanayobi',
     artist: 'Kanaia Asa',
-    album: 'Switch (Cover)',
-    url: 'https://www.youtube.com/watch?v=_ndMYK3eGiY',
+    album: 'Kanayobi',
+    url: 'https://www.youtube.com/watch?v=dTE_TbM2jE4',
+  },
+  {
+    title: 'Jangan Panggil Diriku Idol',
+    artist: 'Kanaia Asa & Tana Nona',
+    album: 'Jangan Panggil Diriku Idol (Cover)',
+    url: 'https://www.youtube.com/watch?v=jydU7Cj3b48',
+  },
+  {
+    title: 'Suatu Saat Bertemu',
+    artist: 'JKT48V',
+    album: 'Suatu Saat Bertemu',
+    url: 'https://www.youtube.com/watch?v=eW1P0lOiBM0',
+  },
+  {
+    title: 'Sungai Impian',
+    artist: 'Kanaia Asa & Pia Meraleo',
+    album: 'Sungai Impian / Yume no Kawa (Cover)',
+    url: 'https://www.youtube.com/watch?v=uxnXVo8W70I',
   },
 ]
 
@@ -79,7 +121,7 @@ const currentTimestamp = computed(() =>
 const formattedDuration = computed(() => dayjs.unix(videoDuration.value).utc().format('mm:ss'))
 
 const isMuted = ref(Boolean(window.localStorage.getItem(SETTING_PREFER_MUTED)))
-const volume = ref(Number(window.localStorage.getItem(SETTING_MEDIA_VOLUME)) || 0)
+const volume = ref(Number(window.localStorage.getItem(SETTING_MEDIA_VOLUME)) || 50)
 
 watch(youtubePlayer, (player) => {
   if (player) {
