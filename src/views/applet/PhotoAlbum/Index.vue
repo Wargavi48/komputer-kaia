@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import ClassicButton from '@/components/ClassicButton'
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, useTemplateRef, watch } from 'vue'
 import { reactive } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import ImgThumbnail from './components/ImgThumbnail.vue'
@@ -12,17 +12,6 @@ import PhotoViewer from './components/PhotoViewer.vue'
 import { getPhotoAlbumData } from '@/services/photoAlbumService'
 
 const images = reactive([])
-
-// Mengambil data foto saat komponen dimount
-onMounted(async () => {
-  try {
-    const photoData = await getPhotoAlbumData()
-    // Update reactive array dengan data yang diambil dari service
-    images.push(...photoData)
-  } catch (error) {
-    console.error('Gagal mengambil data foto:', error)
-  }
-})
 
 const baseUrlPath = '/applet/photo-album'
 
@@ -35,7 +24,7 @@ const selectedImage = computed(() => images[photoIndex.value] || null)
 // const canGoBack = computed(() => window.history.state?.back)
 // const canGoForward = computed(() => window.history.state?.forward)
 
-const scale = ref(3)
+const scale = ref(4)
 
 const lastSelectedIndex = ref(null)
 
@@ -98,8 +87,40 @@ function toggleFullscreen() {
   }
 }
 
+const iconRefs = useTemplateRef('iconRefs')
+
 function exitFullscreen() {
   document.exitFullscreen()
+}
+
+// Mengambil data foto saat komponen dimount
+onMounted(async () => {
+  try {
+    const photoData = await getPhotoAlbumData()
+    // Update reactive array dengan data yang diambil dari service
+    images.push(
+      ...photoData.map((p) => {
+        p.visible = false
+        return p
+      }),
+    )
+  } catch (error) {
+    console.error('Gagal mengambil data foto:', error)
+  }
+})
+
+watch(iconRefs, (icons) => {
+  if (icons.length > 0) {
+    checkIconVisible()
+  }
+})
+
+function checkIconVisible() {
+  let i = 0
+  for (const icon of iconRefs.value) {
+    images[i].visible = icon.isVisible()
+    i++
+  }
 }
 </script>
 
@@ -132,7 +153,7 @@ function exitFullscreen() {
         <span class="bi-house text-xl"></span>
       </ClassicButton>
 
-      <div class="flex flex-row items-center ms-auto">
+      <!-- <div class="flex flex-row items-center ms-auto">
         <ClassicButton>
           <span class="bi-arrow-counterclockwise text-xl"></span>
         </ClassicButton>
@@ -142,9 +163,9 @@ function exitFullscreen() {
         <ClassicButton class="ms-4">
           <span class="bi-download text-xl"></span>
         </ClassicButton>
-      </div>
+      </div> -->
     </nav>
-    <PhotoViewer v-if="selectedImage !== null" :src="selectedImage.url"></PhotoViewer>
+    <PhotoViewer v-if="selectedImage !== null" :src="selectedImage.iframeUrl"></PhotoViewer>
     <div
       class="h-full grow-0 overflow-y-auto w-full flex flex-col"
       v-if="selectedImage == null"
@@ -152,9 +173,12 @@ function exitFullscreen() {
     >
       <div
         class="flex flex-row flex-wrap justify-start items-start border-2 border-inset gap-4 p-4 h-full grow-0 overflow-y-auto"
+        @scrollend="checkIconVisible"
       >
         <ImgThumbnail
           v-for="(img, i) in images"
+          ref="iconRefs"
+          :unload="!img.visible"
           @click.stop="
             (e) => {
               if (e.shiftKey) {
@@ -173,7 +197,7 @@ function exitFullscreen() {
           "
           :filename="img.filename"
           :key="img.filename"
-          :src="img.url"
+          :src="img.iframeUrl"
           :scale="scale"
           :selected="img.selected"
         ></ImgThumbnail>
@@ -227,12 +251,12 @@ function exitFullscreen() {
         </div>
       </div>
       <div v-if="selectedImage === null" class="flex flex-row">
-        <div
+        <!-- <div
           class="ms-auto m-1 border-2 border-gray-200 border-inset bg-gray-300 p-1 flex flex-row items-center"
         >
           <label class="me-2">Zoom: </label>
           <input type="range" name="foo" min="2" step="1" max="5" v-model="scale" class="w-40" />
-        </div>
+        </div> -->
       </div>
     </footer>
   </div>
