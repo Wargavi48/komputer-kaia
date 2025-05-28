@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import Slider from '@/components/SliderComponent.vue'
 import ClassicButton from '@/components/ClassicButton.vue'
 import { formatTime } from '@/utils/formatUtils'
@@ -14,6 +14,10 @@ const props = defineProps({
     default: 0,
   },
   autoplay: {
+    type: Boolean,
+    default: false,
+  },
+  loop: {
     type: Boolean,
     default: false,
   },
@@ -100,6 +104,18 @@ const scrubHandlers = {
     }
   },
 }
+
+const volume = ref(0.5)
+
+watch(volume, (v) => {
+  if (audioRef.value) {
+    /**
+     * @type {HTMLAudioElement}
+     */
+    const audioPlayer = audioRef.value
+    audioPlayer.volume = v
+  }
+})
 </script>
 
 <template>
@@ -108,6 +124,7 @@ const scrubHandlers = {
     <audio
       ref="audioRef"
       :autoplay="props.autoplay"
+      :loop="props.loop"
       :src="audioSrc"
       @loadedmetadata="audioHandlers.handleLoadedMetadata"
       @timeupdate="audioHandlers.handleTimeUpdate"
@@ -140,7 +157,32 @@ const scrubHandlers = {
           @change="scrubHandlers.handleScrubChange"
         />
 
-        <div class="font-mono text-xs">{{ currentTimestamp }} / {{ formattedDuration }}</div>
+        <div class="flex flex-row items-center">
+          <div class="font-mono text-xs shrink-0">
+            {{ currentTimestamp }} / {{ formattedDuration }}
+          </div>
+
+          <span class="ms-auto bi-volume-off-fill" v-if="volume < 0.25"></span>
+          <span class="ms-auto bi-volume-down-fill" v-if="volume >= 0.25 && volume < 0.66"></span>
+          <span class="ms-auto bi-volume-up-fill" v-if="volume > 0.66"></span>
+          <Slider
+            class="ms-4 max-w-[80px]"
+            min="0"
+            max="1"
+            step="0.01"
+            :value="volume"
+            @change="
+              (v) => {
+                volume = v
+              }
+            "
+            @scrubbing="
+              (v) => {
+                volume = v
+              }
+            "
+          />
+        </div>
       </div>
     </div>
   </div>
