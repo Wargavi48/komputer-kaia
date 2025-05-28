@@ -9,6 +9,7 @@ import { apps, desktopIcons as icons } from '../config/desktop'
 import BootScreen from './BootScreen.vue'
 import LoginScreen from './LoginScreen.vue'
 import ShutdownScreen from './ShutdownScreen.vue'
+import AudioPlayer from '@/components/AudioPlayer.vue'
 
 const clockNow = ref(dayjs().format('HH:mm:dd'))
 
@@ -177,6 +178,13 @@ function makeIconAppear(el) {
         }
       "
     >
+      <AudioPlayer
+        audio-src="/audio/bgm.m4a"
+        autoplay
+        loop
+        class="absolute right-0 bottom-0 min-w-[300px] bg-outset"
+        v-if="!isShuttingDown && isLoggedIn"
+      />
       <div
         class="absolute p-6 h-fit max-h-full flex flex-row flex-wrap justify-start items-start gap-2 gap-y-6 max-w-[800px]"
       >
