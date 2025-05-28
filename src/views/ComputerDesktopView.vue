@@ -179,7 +179,7 @@ function makeIconAppear(el) {
       "
     >
       <AudioPlayer
-        audio-src="/audio/bgm.m4a"
+        audio-src="/audio/bgm-loop.m4a"
         autoplay
         loop
         class="absolute right-0 bottom-0 min-w-[300px] bg-outset"
