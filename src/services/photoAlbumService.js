@@ -25,13 +25,18 @@ export async function getPhotoAlbumData() {
   return datas
     .filter((data) => data.fanSubmission)
     .map((data, i) => {
-      const { directGuess } = generateDriveEmbedUrl(data.fanSubmission)
+      const { directGuess, iframeUrl, embedUrl, thumbnailUrl } = generateDriveEmbedUrl(
+        data.fanSubmission,
+      )
 
       return {
         id: i,
         filename: `${i + 1}.jpg`,
         name: data.name || 'Fanart',
         url: directGuess,
+        iframeUrl,
+        thumbnailUrl,
+        embedUrl,
         selected: false,
         rotation: 0,
       }

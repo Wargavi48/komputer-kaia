@@ -26,7 +26,13 @@ watch(props, () => {
       <div class="absolute top-0 left-0 w-full h-full flex justify-center items-center">
         <img src="/hourglass.gif" class="w-10 h-10" v-if="!imageLoaded" alt="" />
       </div>
-      <img
+      <iframe
+        @load="handlePhotoLoad"
+        :src="props.src"
+        class="w-full h-full"
+        frameborder="0"
+      ></iframe>
+      <!-- <img
         :key="props.src"
         @load="handlePhotoLoad"
         :src="props.src"
@@ -35,7 +41,7 @@ watch(props, () => {
           'opacity-0': !imageLoaded,
         }"
         alt=""
-      />
+      /> -->
     </div>
   </div>
 </template>

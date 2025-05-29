@@ -30,8 +30,11 @@ export function generateDriveEmbedUrl(driveUrl) {
   }
 
   return {
-    embedUrl: `https://drive.google.com/uc?export=view&id=${fileId}`,
+    // embedUrl: `https://drive.google.com/uc?export=view&id=${fileId}`,
+    embedUrl: `https://drive.usercontent.google.com/download?id=${fileId}`,
     thumbnailUrl: `https://drive.google.com/thumbnail?id=${fileId}`,
-    directGuess: `https://lh3.googleusercontent.com/d/${fileId}`, // May not always work
+    // directGuess: `https://lh3.googleusercontent.com/d/${fileId}`, // May not always work
+    directGuess: `https://sayonaia.jkt48v.com/image/${fileId}`, // May not always work
+    iframeUrl: `https://drive.google.com/file/d/${fileId}/preview`,
   }
 }
