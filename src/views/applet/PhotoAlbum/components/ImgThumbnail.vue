@@ -43,13 +43,13 @@ defineExpose({
           'bg-transparent': !props.selected,
         }"
       ></div>
-      <!-- <img :src="props.src" class="w-full aspect-square object-contain" alt="" /> -->
-      <iframe
+      <img :src="props.src" class="w-full aspect-square object-contain" alt="" />
+      <!-- <iframe
         v-if="!props.unload"
         :src="props.src"
         class="w-[200%] scale-[50%] aspect-square object-contain origin-top-left absolute z-10"
         frameborder="0"
-      />
+      /> -->
       <div class="absolute w-full h-full flex flex-row items-center justify-center z-0">
         <img src="/hourglass.gif" class="w-10 h-10" alt="" />
       </div>
