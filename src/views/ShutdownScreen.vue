@@ -50,6 +50,26 @@ onMounted(() => {
           </tbody>
         </table>
       </div>
+      <p class="text-orange-700 text-center text-xl mt-8">Infrastructure:</p>
+      <div class="flex flex-row justify-center text-xl">
+        <table class="table-auto">
+          <tbody>
+            <tr>
+              <td class="p-2 align-top font-bold text-end">Sunny</td>
+              <td class="p-2 space-y-2">
+                <div class="space-x-1">
+                  <span class="bi-discord"></span>
+                  <span>sunnymz</span>
+                </div>
+                <div class="space-x-1">
+                  <span class="bi-twitter"></span>
+                  <span>sunnymz</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </cite>
 
     <div v-if="showText">
