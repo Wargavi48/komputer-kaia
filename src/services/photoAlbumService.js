@@ -5,6 +5,7 @@
 
 import { generateDriveEmbedUrl } from '@/utils/generatedDriveEmbedUrl'
 import { getSpreadsheetData } from './spreadsheetService'
+import axios from 'axios'
 
 /**
  * Mengambil data foto dari API atau sumber data lainnya
@@ -51,4 +52,22 @@ export async function getPhotoAlbumData() {
 export async function getPhotoById(id) {
   const photos = await getPhotoAlbumData()
   return photos.find((photo) => photo.id === id) || null
+}
+
+export async function getLocalPhotoList() {
+  const response = await axios.get('/fanarts/credits.txt')
+
+  /**
+   * @type {string}
+   */
+  const usernames = response.data
+  const usernameList = usernames.split('\n')
+  const photoList = usernameList.map((u, i) => ({
+    name: u,
+    url: `/fanarts/${i + 1}.png`,
+    filename: `${i + 1}.png`,
+    creditsUrl: `https://twitter.com/${u.replace('@', '')}`,
+  }))
+
+  return photoList
 }
