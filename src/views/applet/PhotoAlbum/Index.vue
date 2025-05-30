@@ -9,7 +9,7 @@ import PhotoViewer from './components/PhotoViewer.vue'
 // import ClassicIcon from '@/components/ClassicIcon.vue'
 
 // Data foto diambil secara dinamis dari service
-import { getPhotoAlbumData } from '@/services/photoAlbumService'
+import { getLocalPhotoList } from '@/services/photoAlbumService'
 
 const images = reactive([])
 
@@ -96,7 +96,7 @@ function exitFullscreen() {
 // Mengambil data foto saat komponen dimount
 onMounted(async () => {
   try {
-    const photoData = await getPhotoAlbumData()
+    const photoData = await getLocalPhotoList()
     // Update reactive array dengan data yang diambil dari service
     images.push(
       ...photoData.map((p) => {
@@ -165,7 +165,7 @@ function checkIconVisible() {
         </ClassicButton>
       </div> -->
     </nav>
-    <PhotoViewer v-if="selectedImage !== null" :src="selectedImage.iframeUrl"></PhotoViewer>
+    <PhotoViewer v-if="selectedImage !== null" :src="selectedImage.url"></PhotoViewer>
     <div
       class="h-full grow-0 overflow-y-auto w-full flex flex-col"
       v-if="selectedImage == null"
@@ -212,7 +212,16 @@ function checkIconVisible() {
         <p class="text-center">
           {{ selectedImage.filename }}
         </p>
-        <p class="text-center">By {{ selectedImage.name }}</p>
+        <component
+          :is="selectedImage.creditsUrl ? 'a' : 'p'"
+          :href="selectedImage.creditsUrl"
+          class="text-center block"
+          target="_blank"
+          :class="{
+            'underline text-blue-800': selectedImage.creditsUrl,
+          }"
+          >By {{ selectedImage.name }}</component
+        >
         <div class="flex items-center flex-row justify-center gap-4 relative">
           <ClassicButton
             class="border-gray-300"
