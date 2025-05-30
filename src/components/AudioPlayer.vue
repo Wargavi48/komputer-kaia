@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import Slider from '@/components/SliderComponent.vue'
 import ClassicButton from '@/components/ClassicButton.vue'
 import { formatTime } from '@/utils/formatUtils'
@@ -108,6 +108,10 @@ const scrubHandlers = {
 const volume = ref(0.5)
 
 watch(volume, (v) => {
+  setVolume(v)
+})
+
+function setVolume(v) {
   if (audioRef.value) {
     /**
      * @type {HTMLAudioElement}
@@ -115,6 +119,10 @@ watch(volume, (v) => {
     const audioPlayer = audioRef.value
     audioPlayer.volume = v
   }
+}
+
+onMounted(() => {
+  setVolume(volume.value)
 })
 </script>
 

@@ -197,7 +197,7 @@ function checkIconVisible() {
           "
           :filename="img.filename"
           :key="img.filename"
-          :src="img.iframeUrl"
+          :src="img.url"
           :scale="scale"
           :selected="img.selected"
         ></ImgThumbnail>
