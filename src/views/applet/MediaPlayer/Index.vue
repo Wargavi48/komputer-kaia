@@ -73,6 +73,18 @@ const playlist = [
     album: 'Sungai Impian / Yume no Kawa (Cover)',
     url: 'https://www.youtube.com/watch?v=uxnXVo8W70I',
   },
+  {
+    title: 'Always be With You XD',
+    artist: 'Kanaia Asa & Caerula Aki',
+    album: 'Always be With You XD (Cover)',
+    url: 'https://www.youtube.com/watch?v=b4IHMx5acIc',
+  },
+  {
+    title: 'Memori Asa',
+    artist: 'Wargavi48',
+    album: 'Memori Asa (Special Graduation Kanaia Asa)',
+    url: 'https://www.youtube.com/watch?v=5BViCw0zyUM',
+  },
 ]
 
 const showPlaylist = ref(false)
