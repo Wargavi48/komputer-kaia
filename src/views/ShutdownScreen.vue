@@ -41,6 +41,10 @@ onMounted(() => {
                   <span class="bi-discord"></span>
                   <span>looptaro</span>
                 </div>
+                <div class="space-x-1">
+                  <span class="bi-twitter"></span>
+                  <span>shota_rf</span>
+                </div>
               </td>
             </tr>
           </tbody>
