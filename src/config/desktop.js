@@ -50,7 +50,7 @@ export const desktopIcons = [
   ...apps,
   {
     icon: 'notepad',
-    label: 'Terima Kasih Kana.pdf',
+    label: 'Memori Asa.pdf',
     appletUrl: 'https://online.fliphtml5.com/cxnyj/ocnr/',
     windowSetting: {
       minWidth: 500,
