@@ -20,7 +20,7 @@ const runningApps = reactive([])
  * @param index {number}
  */
 function openApplet(index) {
-  const selectedApp = apps[index]
+  const selectedApp = apps[index] || desktopIcons[index]
 
   for (const app of runningApps) {
     app.active = false

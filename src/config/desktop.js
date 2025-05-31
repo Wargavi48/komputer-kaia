@@ -46,4 +46,15 @@ export const apps = [
   },
 ]
 
-export const desktopIcons = [...apps]
+export const desktopIcons = [
+  ...apps,
+  {
+    icon: 'notepad',
+    label: 'Terima Kasih Kana.pdf',
+    appletUrl: 'https://online.fliphtml5.com/cxnyj/ocnr/',
+    windowSetting: {
+      minWidth: 500,
+      minHeight: 480,
+    },
+  },
+]
